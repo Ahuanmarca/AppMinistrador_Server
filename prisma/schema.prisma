@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model announces {
+  id          Int        @id @default(autoincrement())
+  title       String?    @db.VarChar(255)
+  description String?
+  building_id Int?
+  date        DateTime?  @db.Date
+  time        DateTime?  @db.Time(6)
+  buildings   buildings? @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
+}
+
+model bank_accounts {
+  id                   Int                    @id @default(autoincrement())
+  iban                 String?                @db.VarChar(255)
+  holder               String?                @db.VarChar(255)
+  bank                 String?                @db.VarChar(255)
+  currency             String?                @db.VarChar(55)
+  description          String?
+  banking_transactions banking_transactions[]
+}
+
+model banking_transactions {
+  id            Int            @id @default(autoincrement())
+  account_id    Int?
+  property_id   Int?
+  description   String?
+  category      String?        @db.VarChar(255)
+  date          DateTime?      @db.Date
+  time          DateTime?      @db.Time(6)
+  amount        Decimal?       @db.Decimal(10, 2)
+  bank_accounts bank_accounts? @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_id")
+  properties    properties?    @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_property_id")
+}
+
+model buildings {
+  id                                     Int          @id @default(autoincrement())
+  address_type                           String?      @db.VarChar(255)
+  street_address                         String?      @db.VarChar(255)
+  number                                 String?      @db.VarChar(255)
+  district                               String?      @db.VarChar(255)
+  postal_code                            String?      @db.VarChar(255)
+  locality                               String?      @db.VarChar(255)
+  province                               String?      @db.VarChar(255)
+  country                                String?      @db.VarChar(255)
+  admin_dni                              String?      @db.VarChar(255)
+  president_dni                          String?      @db.VarChar(255)
+  build_year                             Int?
+  floors                                 Int?
+  elevators                              Int?
+  parking_slots                          Int?
+  image_url                              String?      @db.VarChar(255)
+  announces                              announces[]
+  people_buildings_admin_dniTopeople     people?      @relation("buildings_admin_dniTopeople", fields: [admin_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_admin_dni")
+  people_buildings_president_dniTopeople people?      @relation("buildings_president_dniTopeople", fields: [president_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_president_dni")
+  incidences                             incidences[]
+  properties                             properties[]
+}
+
+model incidences {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String?
+  image_url   String?
+  user_dni    String?    @db.VarChar(255)
+  building_id Int?
+  provider_id Int?
+  date        DateTime?  @db.Date
+  time        DateTime?  @db.Time(6)
+  status      String?    @db.VarChar(55)
+  buildings   buildings? @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
+  providers   providers? @relation(fields: [provider_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_provider_id")
+  users       users?     @relation(fields: [user_dni], references: [person_dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dni")
+}
+
+model neighbors_to_properties {
+  property_id  Int
+  neighbor_dni String     @db.VarChar(55)
+  people       people     @relation(fields: [neighbor_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_neighbor_dni")
+  properties   properties @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_property_id")
+
+  @@id([property_id, neighbor_dni])
+}
+
+model owners_to_properties {
+  property_id Int
+  owner_dni   String     @db.VarChar(55)
+  people      people     @relation(fields: [owner_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_owner_dni")
+  properties  properties @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_property_id")
+
+  @@id([property_id, owner_dni])
+}
+
+model people {
+  id                                        Int                       @id @default(autoincrement())
+  forename                                  String                    @db.VarChar(255)
+  surname                                   String                    @db.VarChar(255)
+  second_surname                            String?                   @db.VarChar(255)
+  email                                     String?                   @db.VarChar(255)
+  phone_code                                String?                   @db.VarChar(55)
+  phone_number                              String?                   @db.VarChar(255)
+  birth                                     DateTime?                 @db.Date
+  dni                                       String?                   @unique @db.VarChar(55)
+  buildings_buildings_admin_dniTopeople     buildings[]               @relation("buildings_admin_dniTopeople")
+  buildings_buildings_president_dniTopeople buildings[]               @relation("buildings_president_dniTopeople")
+  neighbors_to_properties                   neighbors_to_properties[]
+  owners_to_properties                      owners_to_properties[]
+  properties                                properties[]
+  users                                     users?
+}
+
+model properties {
+  id                      Int                       @id @default(autoincrement())
+  building_id             Int?
+  floor                   String?                   @db.VarChar(55)
+  door                    String?                   @db.VarChar(55)
+  owner_dni               String?                   @db.VarChar(55)
+  banking_transactions    banking_transactions[]
+  neighbors_to_properties neighbors_to_properties[]
+  owners_to_properties    owners_to_properties[]
+  people                  people?                   @relation(fields: [owner_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "dk_owner_dni")
+  buildings               buildings?                @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
+}
+
+model providers {
+  id           Int          @id @default(autoincrement())
+  title        String       @db.VarChar(255)
+  description  String?
+  category     String?      @db.VarChar(255)
+  phone_code   String       @db.VarChar(55)
+  phone_number String       @db.VarChar(255)
+  email        String       @db.VarChar(255)
+  incidences   incidences[]
+}
+
+model users {
+  id              Int          @id @default(autoincrement())
+  person_dni      String?      @unique @db.VarChar(255)
+  username        String?      @db.VarChar(255)
+  hash            String?      @db.VarChar(255)
+  is_validated    Boolean?     @default(false)
+  is_system_admin Boolean?     @default(false)
+  portrait_url    String?      @db.VarChar(255)
+  incidences      incidences[]
+  people          people?      @relation(fields: [person_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_person_dni")
+}

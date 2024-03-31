@@ -26,9 +26,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const buildingsController = __importStar(require("../controllers/buildings.controller"));
+const peopleController = __importStar(require("../controllers/people.controller"));
 const express_1 = __importDefault(require("express"));
 const catchAsync_1 = __importDefault(require("../middlewares/catchAsync"));
 const router = express_1.default.Router();
-router.get('/all', (0, catchAsync_1.default)(buildingsController.getAllBuildings));
+router.get('/all', (0, catchAsync_1.default)(peopleController.getAllPeople));
 exports.default = router;

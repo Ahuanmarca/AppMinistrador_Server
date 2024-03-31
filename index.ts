@@ -1,34 +1,28 @@
+import './src/config/environment';
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
-import dotenv from 'dotenv';
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config();
-}
+import buildingsRouter from './src/routes/buildings.router';
+import ExpressError from './src/utils/ExpressError';
 
-const PORT = 8000;
+const { PORT } = process.env;
 
 async function main() {
   const app = express();
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-  app.get('/hello', async (req, res) => {
-    const allPeople = await prisma.people.findMany();
-    res.send(allPeople);
+  app.get('/', (req, res) => {
+    res.send('hello, world');
   });
+
+  app.use('/buildings', buildingsRouter);
+
+  app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', "404"));
+  })
 
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
 }
 
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+main();

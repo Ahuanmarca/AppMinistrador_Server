@@ -81,12 +81,15 @@ model incidences {
 }
 
 model neighbors_to_properties {
-  property_id  Int
-  neighbor_dni String     @db.VarChar(55)
-  people       people     @relation(fields: [neighbor_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_neighbor_dni")
-  properties   properties @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_property_id")
+  id            Int        @default(autoincrement())
+  property_id   Int
+  neighbor_dni  String     @db.VarChar(55)
+  starting_date DateTime?  @db.Date
+  ending_date   DateTime?  @db.Date
+  people        people     @relation(fields: [neighbor_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_neighbor_dni")
+  properties    properties @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_property_id")
 
-  @@id([property_id, neighbor_dni])
+  @@id([id, property_id, neighbor_dni])
 }
 
 model owners_to_properties {

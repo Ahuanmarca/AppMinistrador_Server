@@ -76,10 +76,13 @@ CREATE TABLE "incidences" (
 
 -- CreateTable
 CREATE TABLE "neighbors_to_properties" (
+    "id" SERIAL NOT NULL,
     "property_id" INTEGER NOT NULL,
     "neighbor_dni" VARCHAR(55) NOT NULL,
+    "starting_date" DATE,
+    "ending_date" DATE,
 
-    CONSTRAINT "neighbors_to_properties_pkey" PRIMARY KEY ("property_id","neighbor_dni")
+    CONSTRAINT "neighbors_to_properties_pkey" PRIMARY KEY ("id","property_id","neighbor_dni")
 );
 
 -- CreateTable

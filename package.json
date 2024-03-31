@@ -4,6 +4,11 @@
   "description": "Server for AppMinistrador App",
   "main": "index.js",
   "scripts": {
+    "prisma-introspection": "npx prisma db pull",
+    "prisma-baseline-1": "rimraf prisma/migrations && mkdir -p prisma/migrations/0_init",
+    "prisma-baseline-2": "npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql",
+    "prisma-baseline-3": "npx prisma migrate resolve --applied 0_init",
+    "prisma-generate": "npx prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",

@@ -6,6 +6,12 @@ async function getAllPeople(req: Request, res: Response) {
   res.json(allPeople);
 }
 
-export {
-  getAllPeople,
+async function getNeighboursByBuildingId(req: Request, res: Response) {
+  const { buildingId } = req.params;
+  const buildingNeighbours: number = await peopleRepository.getNeighboursByBuildingId(
+    Number(buildingId)
+  );
+  res.json(buildingNeighbours);
 }
+
+export { getAllPeople, getNeighboursByBuildingId };

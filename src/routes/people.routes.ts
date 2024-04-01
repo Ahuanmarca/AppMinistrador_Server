@@ -5,5 +5,9 @@ import catchAsync from '../middlewares/catchAsync';
 const router = express.Router();
 
 router.get('/all', catchAsync(peopleController.getAllPeople));
+router.get(
+  '/neighbours/count/byBuildingId/:buildingId',
+  catchAsync(peopleController.getNeighboursByBuildingId)
+);
 
 export default router;

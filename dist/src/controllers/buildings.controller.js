@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllBuildings = void 0;
+exports.getBuildingById = exports.getBuildingsList = exports.getAllBuildings = void 0;
 const buildingsRepository = __importStar(require("../repository/buildings.repository"));
 function getAllBuildings(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -41,3 +41,18 @@ function getAllBuildings(req, res) {
     });
 }
 exports.getAllBuildings = getAllBuildings;
+function getBuildingsList(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const buildingsList = yield buildingsRepository.getBuildingsList();
+        res.json(buildingsList);
+    });
+}
+exports.getBuildingsList = getBuildingsList;
+function getBuildingById(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { buildingId } = req.params;
+        const building = yield buildingsRepository.getBuildingById(Number(buildingId));
+        res.json(building);
+    });
+}
+exports.getBuildingById = getBuildingById;

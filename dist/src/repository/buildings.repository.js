@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllBuildings = void 0;
+exports.getBuildingById = exports.getBuildingsList = exports.getAllBuildings = void 0;
 const prisma_1 = __importDefault(require("../config/prisma"));
 function getAllBuildings() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -33,3 +33,32 @@ function getAllBuildings() {
     });
 }
 exports.getAllBuildings = getAllBuildings;
+function getBuildingsList() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const allBuildings = yield prisma_1.default.buildings.findMany();
+        const buildingsList = allBuildings.map((building) => {
+            return {
+                id: building.id,
+                title: `${building.address_type} ${building.street_address} ${building.number}`,
+            };
+        });
+        return buildingsList;
+    });
+}
+exports.getBuildingsList = getBuildingsList;
+function getBuildingById(buildingId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const building = prisma_1.default.buildings.findUnique({
+            where: {
+                id: buildingId,
+            },
+            include: {
+                people_buildings_president_dniTopeople: true,
+                incidences: true,
+                announces: true,
+            }
+        });
+        return building;
+    });
+}
+exports.getBuildingById = getBuildingById;

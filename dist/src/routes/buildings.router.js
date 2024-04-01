@@ -31,4 +31,6 @@ const express_1 = __importDefault(require("express"));
 const catchAsync_1 = __importDefault(require("../middlewares/catchAsync"));
 const router = express_1.default.Router();
 router.get('/all', (0, catchAsync_1.default)(buildingsController.getAllBuildings));
+router.get('/list', (0, catchAsync_1.default)(buildingsController.getBuildingsList));
+router.get('/getById/:buildingId', (0, catchAsync_1.default)(buildingsController.getBuildingById));
 exports.default = router;

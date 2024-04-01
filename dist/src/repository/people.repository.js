@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNeighboursByBuildingId = exports.getAllPeople = void 0;
+exports.countNeighboursByBuildingId = exports.getAllPeople = void 0;
 const prisma_1 = __importDefault(require("../config/prisma"));
 function getAllPeople() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -21,19 +21,24 @@ function getAllPeople() {
     });
 }
 exports.getAllPeople = getAllPeople;
-function getNeighboursByBuildingId(buildingId) {
+function countNeighboursByBuildingId(buildingId, dates) {
     return __awaiter(this, void 0, void 0, function* () {
-        const buildingNeighbours = yield prisma_1.default.$queryRaw `
- 
-      SELECT count(*) FROM properties
-      INNER JOIN neighbors_to_properties
-      ON neighbors_to_properties.property_id = properties.id
-      WHERE properties.building_id = ${buildingId}
-      AND neighbors_to_properties.ending_date IS NULL;`;
-        // TypeScript can't infer the 'buildingNeighbours' type,
-        // so we use type assertion to specify it
-        // ...Prisma returns an array with one object => [{ count: 30n }] (30n is a bigInt)
-        return parseInt(buildingNeighbours[0].count);
+        let buildingNeighbours = yield Promise.all(dates.map((date) => __awaiter(this, void 0, void 0, function* () {
+            const result = yield prisma_1.default.$queryRaw `
+          SELECT ${date} AS "date", count(*) AS "count" FROM properties
+          INNER JOIN neighbors_to_properties
+          ON neighbors_to_properties.property_id = properties.id
+          WHERE properties.building_id = ${buildingId}
+          AND neighbors_to_properties.starting_date < ${date} :: DATE
+          AND neighbors_to_properties.ending_date IS NULL;`;
+            return result;
+        })));
+        buildingNeighbours = buildingNeighbours.flat();
+        buildingNeighbours = buildingNeighbours.map((n) => ({
+            date: n.date,
+            count: n.count.toString(),
+        }));
+        return buildingNeighbours;
     });
 }
-exports.getNeighboursByBuildingId = getNeighboursByBuildingId;
+exports.countNeighboursByBuildingId = countNeighboursByBuildingId;

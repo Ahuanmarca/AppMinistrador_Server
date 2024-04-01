@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/all', catchAsync(peopleController.getAllPeople));
 router.get(
   '/neighbours/count/byBuildingId/:buildingId',
-  catchAsync(peopleController.getNeighboursByBuildingId)
+  catchAsync(peopleController.countNeighboursByBuildingId)
 );
 
 export default router;

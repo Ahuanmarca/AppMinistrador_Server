@@ -30,4 +30,15 @@ async function countNeighboursByBuildingId(req: Request, res: Response) {
   res.json(buildingNeighbours);
 }
 
-export { getAllPeople, countNeighboursByBuildingId };
+async function countOwnersByBuildingId(req: Request, res: Response) {
+  const { buildingId } = req.params;
+  
+  const buildingOwners = await peopleRepository.countOwnersByBuildingId(Number(buildingId));
+  res.json(buildingOwners);
+}
+
+export {
+  getAllPeople,
+  countNeighboursByBuildingId,
+  countOwnersByBuildingId,
+};

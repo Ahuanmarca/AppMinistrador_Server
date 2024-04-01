@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.countNeighboursByBuildingId = exports.getAllPeople = void 0;
+exports.countOwnersByBuildingId = exports.countNeighboursByBuildingId = exports.getAllPeople = void 0;
 const peopleRepository = __importStar(require("../repository/people.repository"));
 const date_fns_1 = require("date-fns");
 function getAllPeople(req, res) {
@@ -63,3 +63,11 @@ function countNeighboursByBuildingId(req, res) {
     });
 }
 exports.countNeighboursByBuildingId = countNeighboursByBuildingId;
+function countOwnersByBuildingId(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { buildingId } = req.params;
+        const buildingOwners = yield peopleRepository.countOwnersByBuildingId(Number(buildingId));
+        res.json(buildingOwners);
+    });
+}
+exports.countOwnersByBuildingId = countOwnersByBuildingId;

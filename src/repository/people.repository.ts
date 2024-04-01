@@ -14,12 +14,14 @@ async function countNeighboursByBuildingId(
     dates.map(
       async (date) => {
         const result: { date: string; count: string } = await prisma.$queryRaw`
+
           SELECT ${date} AS "date", count(*) AS "count" FROM properties
           INNER JOIN neighbors_to_properties
           ON neighbors_to_properties.property_id = properties.id
           WHERE properties.building_id = ${buildingId}
           AND neighbors_to_properties.starting_date < ${date} :: DATE
           AND neighbors_to_properties.ending_date IS NULL;`
+
         return result;
       }
     )
@@ -33,4 +35,19 @@ async function countNeighboursByBuildingId(
   return buildingNeighbours;
 }
 
-export { getAllPeople, countNeighboursByBuildingId };
+async function countOwnersByBuildingId(buildingId: number) {
+  const buildingOwners = await prisma.$queryRaw`
+
+    SELECT count(DISTINCT owners_to_properties.owner_dni)
+    FROM properties INNER JOIN owners_to_properties
+    ON owners_to_properties.property_id = properties.id
+    WHERE properties.building_id = ${buildingId};`;
+  
+  return Number(buildingOwners[0].count);
+}
+
+export {
+  getAllPeople,
+  countNeighboursByBuildingId,
+  countOwnersByBuildingId,
+};

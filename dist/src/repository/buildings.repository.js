@@ -16,8 +16,20 @@ exports.getAllBuildings = void 0;
 const prisma_1 = __importDefault(require("../config/prisma"));
 function getAllBuildings() {
     return __awaiter(this, void 0, void 0, function* () {
-        const allBuildings = yield prisma_1.default.buildings.findMany();
-        return allBuildings;
+        const allBuildings = yield prisma_1.default.buildings.findMany({
+            include: {
+                people_buildings_president_dniTopeople: true,
+                incidences: true,
+                announces: true,
+            }
+        });
+        const simplifiedBuildings = allBuildings.map((b) => {
+            delete b.president_dni;
+            const president = b.people_buildings_president_dniTopeople;
+            delete b.people_buildings_president_dniTopeople;
+            return Object.assign(Object.assign({}, b), { presitent: president });
+        });
+        return simplifiedBuildings;
     });
 }
 exports.getAllBuildings = getAllBuildings;

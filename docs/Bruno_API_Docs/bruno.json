@@ -8,6 +8,6 @@
   ],
   "presets": {
     "requestType": "http",
-    "requestUrl": "http://localhost:8000"
+    "requestUrl": "https://appministrador-server-tob7.onrender.com/"
   }
 }

@@ -4,79 +4,109 @@ Backend for the AppMinistrador app.
 
 The AppMinistrador app is the capstone project for the Full Stack Developer Bootcamp at The Bridge, in Valencia - Spain.  
 
-## Routes
+## API
 
-### `/buildings/all`
+### Base URL
 
-Get all buildings.
+```
+https://appministrador-server-tob7.onrender.com
+```
 
-### `/buildings/list`
+### Routes
+
+#### `Get All Buildings`
+
+```
+/buildings/all
+```
+
+#### `Get Building List`
 
 Get a list of all buildings, including title (address) and id. Intended for dropdown menu.
 
-### `/buildings/getById/:buildingId`
+```
+/buildings/list
+```
+
+#### `Get Building By Id`
 
 Get one building by id. Includes the following related data:
 - President
 - Incidences
 - Announces
 
-### `/people/all`
+```
+/buildings/getById/:buildingId
+```
+
+#### `Get All People`
 
 Get all people from database.
 
-### `/people/neighbours/count/byBuildingId/:buildingId`
+```
+/people/all
+```
+
+#### `Count Neighbours By Building Id and Date(s)`
 
 Counts neighbours by buiding id and date(s).
 
-**Example 1: No query params returns current date only**
-
-Query:
-
 ```
-/people/neighbours/count/byBuildingId/1
+/people/neighbours/count/byBuildingId/:buildingId
 ```
 
-Result:
+- **Example 1: No query params returns current date only**
 
-``` json
-[ 
-  { "2024-04-02": "52" },
-]
-```
+  Query:
 
-Accepts query param "dates" with value in "yyyy-mm-dd" format. If provided, returns the total neighbours for the specified dates.
+  ```
+  /people/neighbours/count/byBuildingId/1
+  ```
 
-**Example 2: With query params, returns specified dates, and current date at the end**
+  Result:
 
-Query:
+  ``` json
+  [ 
+    { "2024-04-02": "52" },
+  ]
+  ```
 
-```
-/people/neighbours/count/byBuildingId/1?dates=2024-01-31&dates=2024-02-29
-```
+- **Example 2: With query params, returns specified dates, and current date at the end**
 
-Result:
+  Accepts query param "dates" with value in "yyyy-mm-dd" format. If provided, returns the total neighbours for the specified dates.
 
-``` json
-[
-  {
-    "date": "2024-01-31",
-    "count": "27"
-  },
-  {
-    "date": "2024-02-29",
-    "count": "30"
-  },
-  {
-    "date": "2024-04-01",
-    "count": "30"
-  }
-]
-```
+  Query:
 
-### `/people/owners/count/byBuildingId/:buildingId`
+  ```
+  /people/neighbours/count/byBuildingId/1?dates=2024-01-31&dates=2024-02-29
+  ```
+
+  Result:
+
+  ``` json
+  [
+    {
+      "date": "2024-01-31",
+      "count": "27"
+    },
+    {
+      "date": "2024-02-29",
+      "count": "30"
+    },
+    {
+      "date": "2024-04-01",
+      "count": "30"
+    }
+  ]
+  ```
+
+#### `Count Owners By Building Id`
 
 Count owners by building id. Returns the current total as a plain number.
+
+```
+/people/owners/count/byBuildingId/:buildingId
+```
 
 ## Technologies
 

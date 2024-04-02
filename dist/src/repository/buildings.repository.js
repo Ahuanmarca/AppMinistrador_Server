@@ -23,26 +23,21 @@ function getAllBuildings() {
                 announces: true,
             }
         });
-        const simplifiedBuildings = allBuildings.map((b) => {
-            delete b.president_dni;
-            const president = b.people_buildings_president_dniTopeople;
-            delete b.people_buildings_president_dniTopeople;
-            return Object.assign(Object.assign({}, b), { presitent: president });
-        });
-        return simplifiedBuildings;
+        return allBuildings;
     });
 }
 exports.getAllBuildings = getAllBuildings;
 function getBuildingsList() {
     return __awaiter(this, void 0, void 0, function* () {
-        const allBuildings = yield prisma_1.default.buildings.findMany();
-        const buildingsList = allBuildings.map((building) => {
-            return {
-                id: building.id,
-                title: `${building.address_type} ${building.street_address} ${building.number}`,
-            };
+        const buildingList = yield prisma_1.default.buildings.findMany({
+            select: {
+                id: true,
+                address_type: true,
+                street_address: true,
+                number: true,
+            }
         });
-        return buildingsList;
+        return buildingList;
     });
 }
 exports.getBuildingsList = getBuildingsList;

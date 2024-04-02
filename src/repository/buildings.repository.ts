@@ -9,30 +9,20 @@ async function getAllBuildings() {
     }
   });
 
-  const simplifiedBuildings = allBuildings.map((b) => {
-    delete b.president_dni;
-    const president = b.people_buildings_president_dniTopeople;
-    delete b.people_buildings_president_dniTopeople;
-    
-    return {
-      ...b,
-      presitent: president,
-    }
-  })
-
-  return simplifiedBuildings;
+  return allBuildings;
 }
 
 async function getBuildingsList() {
-  const allBuildings = await prisma.buildings.findMany();
-  const buildingsList = allBuildings.map((building) => {
-    return {
-      id: building.id,
-      title: `${building.address_type} ${building.street_address} ${building.number}`,
+  const buildingList = await prisma.buildings.findMany({
+    select: {
+      id: true,
+      address_type: true,
+      street_address: true,
+      number: true,
     }
-  })  
+  });
 
-  return buildingsList;
+  return buildingList;
 }
 
 async function getBuildingById(buildingId: number) {

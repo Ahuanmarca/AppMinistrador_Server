@@ -34,17 +34,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getBuildingById = exports.getBuildingsList = exports.getAllBuildings = void 0;
 const buildingsRepository = __importStar(require("../repository/buildings.repository"));
+const formatters_1 = require("../utils/formatters");
 function getAllBuildings(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const allBuildings = yield buildingsRepository.getAllBuildings();
-        res.json(allBuildings);
+        const formattedBuildings = allBuildings.map((b) => (0, formatters_1.formatBuilding)(b));
+        res.json(formattedBuildings);
     });
 }
 exports.getAllBuildings = getAllBuildings;
 function getBuildingsList(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const buildingsList = yield buildingsRepository.getBuildingsList();
-        res.json(buildingsList);
+        res.json((0, formatters_1.formatBuildingList)(buildingsList));
     });
 }
 exports.getBuildingsList = getBuildingsList;
@@ -52,7 +54,7 @@ function getBuildingById(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { buildingId } = req.params;
         const building = yield buildingsRepository.getBuildingById(Number(buildingId));
-        res.json(building);
+        res.json((0, formatters_1.formatBuilding)(building));
     });
 }
 exports.getBuildingById = getBuildingById;

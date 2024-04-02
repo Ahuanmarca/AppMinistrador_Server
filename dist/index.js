@@ -16,6 +16,7 @@ require("./src/config/environment");
 const express_1 = __importDefault(require("express"));
 const buildings_router_1 = __importDefault(require("./src/routes/buildings.router"));
 const people_routes_1 = __importDefault(require("./src/routes/people.routes"));
+const providers_router_1 = __importDefault(require("./src/routes/providers.router"));
 const ExpressError_1 = __importDefault(require("./src/utils/ExpressError"));
 const { PORT } = process.env;
 function main() {
@@ -28,6 +29,7 @@ function main() {
         });
         app.use('/buildings', buildings_router_1.default);
         app.use('/people', people_routes_1.default);
+        app.use('/providers', providers_router_1.default);
         app.all('*', (req, res, next) => {
             next(new ExpressError_1.default('Page Not Found', "404"));
         });

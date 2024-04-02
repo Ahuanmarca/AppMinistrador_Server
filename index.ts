@@ -2,6 +2,7 @@ import './src/config/environment';
 import express from 'express';
 import buildingsRouter from './src/routes/buildings.router';
 import peopleRouter from './src/routes/people.routes';
+import providersRouter from './src/routes/providers.router';
 import ExpressError from './src/utils/ExpressError';
 
 const { PORT } = process.env;
@@ -17,6 +18,7 @@ async function main() {
 
   app.use('/buildings', buildingsRouter);
   app.use('/people', peopleRouter);
+  app.use('/providers', providersRouter);
 
   app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', "404"));

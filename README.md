@@ -108,6 +108,12 @@ Count owners by building id. Returns the current total as a plain number.
 /people/owners/count/byBuildingId/:buildingId
 ```
 
+#### `Get All Providers`
+
+```
+/providers/all
+```
+
 ## Technologies
 
 - Node.js

@@ -49,8 +49,23 @@ async function getAccountCashflowByMonthRange(req: Request, res: Response) {
   res.json(cashflow);
 }
 
+async function getCurrentMonthFees(req: Request, res: Response) {
+  const { buildingId } = req.params;
+
+  const currentMonthFees = await bankingRepository.getCurrentMonthFees(Number(buildingId));
+  const paidFees = await bankingRepository.getCurrentMonthPaidFees(Number(buildingId));
+
+  res.json(
+    {
+      fees: currentMonthFees[0].debt,
+      paid: paidFees[0].sum ? paidFees[0].sum : '0',
+    }
+  );
+}
+
 export {
   getAllBankAccounts,
   getBankAccountBalance,
   getAccountCashflowByMonthRange,
+  getCurrentMonthFees,
 }

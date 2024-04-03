@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAccountCashflowByMonthRange = exports.getBankAccountBalance = exports.getAllBankAccounts = void 0;
+exports.getCurrentMonthFees = exports.getAccountCashflowByMonthRange = exports.getBankAccountBalance = exports.getAllBankAccounts = void 0;
 const bankingRepository = __importStar(require("../repository/banking.repository"));
 const helpers_1 = require("../utils/helpers");
 const date_fns_1 = require("date-fns");
@@ -76,3 +76,15 @@ function getAccountCashflowByMonthRange(req, res) {
     });
 }
 exports.getAccountCashflowByMonthRange = getAccountCashflowByMonthRange;
+function getCurrentMonthFees(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { buildingId } = req.params;
+        const currentMonthFees = yield bankingRepository.getCurrentMonthFees(Number(buildingId));
+        const paidFees = yield bankingRepository.getCurrentMonthPaidFees(Number(buildingId));
+        res.json({
+            fees: currentMonthFees[0].debt,
+            paid: paidFees[0].sum ? paidFees[0].sum : '0',
+        });
+    });
+}
+exports.getCurrentMonthFees = getCurrentMonthFees;

@@ -152,6 +152,14 @@ Example: Get the inflow and outflow from March 2023 to February 2024 (inclusive)
 
 **You must provide both start and end dates, or the route will return an error.** We will implement default values in the future.
 
+#### `Get Current Month Community Fees`
+
+Returns current month community fees and paid fees.
+
+```
+/banking/building/:buildingId/fees
+```
+
 #### `Get All Providers`
 
 ```

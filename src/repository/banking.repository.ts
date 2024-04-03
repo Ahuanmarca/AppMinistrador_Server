@@ -51,8 +51,39 @@ async function getAccountCashflowByMonthRange(accountId: number, start: string, 
   return result;
 }
 
+async function getCurrentMonthFees(buildingId: number) {
+  const result = await prisma.$queryRaw`
+  
+    SELECT sum(property_due) AS debt FROM community_fees
+      WHERE EXTRACT(YEAR FROM due_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+      AND EXTRACT(MONTH FROM due_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+      AND building_id = ${buildingId};
+  
+  `
+
+  return result;
+}
+
+async function getCurrentMonthPaidFees(buildingId: number) {
+  const result = await prisma.$queryRaw`
+  
+    SELECT sum(amount) FROM banking_transactions
+    WHERE
+      EXTRACT(YEAR FROM date) = EXTRACT(YEAR FROM CURRENT_DATE)
+      AND EXTRACT(MONTH FROM date) = EXTRACT(MONTH FROM CURRENT_DATE)
+      AND EXTRACT(DAY FROM date) <= EXTRACT(DAY FROM CURRENT_DATE)
+      AND building_id = ${buildingId}
+      AND property_id IS NOT NULL;
+  
+  `;
+
+  return result;
+}
+
 export {
   getAllBankAccounts,
   getBankAccountBalance,
   getAccountCashflowByMonthRange,
+  getCurrentMonthFees,
+  getCurrentMonthPaidFees,
 }

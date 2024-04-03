@@ -18,4 +18,9 @@ router.get(
   bankingController.getAccountCashflowByMonthRange
 );
 
+router.get(
+  '/building/:buildingId/fees',
+  bankingController.getCurrentMonthFees
+);
+
 export default router;

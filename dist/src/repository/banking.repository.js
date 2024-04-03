@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAccountCashflowByMonthRange = exports.getBankAccountBalance = exports.getAllBankAccounts = void 0;
+exports.getCurrentMonthPaidFees = exports.getCurrentMonthFees = exports.getAccountCashflowByMonthRange = exports.getBankAccountBalance = exports.getAllBankAccounts = void 0;
 const prisma_1 = __importDefault(require("../config/prisma"));
 function getAllBankAccounts() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -69,3 +69,34 @@ function getAccountCashflowByMonthRange(accountId, start, end) {
     });
 }
 exports.getAccountCashflowByMonthRange = getAccountCashflowByMonthRange;
+function getCurrentMonthFees(buildingId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield prisma_1.default.$queryRaw `
+  
+    SELECT sum(property_due) AS debt FROM community_fees
+      WHERE EXTRACT(YEAR FROM due_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+      AND EXTRACT(MONTH FROM due_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+      AND building_id = ${buildingId};
+  
+  `;
+        return result;
+    });
+}
+exports.getCurrentMonthFees = getCurrentMonthFees;
+function getCurrentMonthPaidFees(buildingId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield prisma_1.default.$queryRaw `
+  
+    SELECT sum(amount) FROM banking_transactions
+    WHERE
+      EXTRACT(YEAR FROM date) = EXTRACT(YEAR FROM CURRENT_DATE)
+      AND EXTRACT(MONTH FROM date) = EXTRACT(MONTH FROM CURRENT_DATE)
+      AND EXTRACT(DAY FROM date) <= EXTRACT(DAY FROM CURRENT_DATE)
+      AND building_id = ${buildingId}
+      AND property_id IS NOT NULL;
+  
+  `;
+        return result;
+    });
+}
+exports.getCurrentMonthPaidFees = getCurrentMonthPaidFees;

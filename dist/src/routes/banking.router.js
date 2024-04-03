@@ -32,4 +32,5 @@ const router = express_1.default.Router();
 router.get('/accounts/all', bankingController.getAllBankAccounts);
 router.get('/account/:bankAccountId/balance', bankingController.getBankAccountBalance);
 router.get('/account/:accountId/getCashflow', bankingController.getAccountCashflowByMonthRange);
+router.get('/building/:buildingId/fees', bankingController.getCurrentMonthFees);
 exports.default = router;

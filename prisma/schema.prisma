@@ -38,29 +38,32 @@ model banking_transactions {
   amount        Decimal?       @db.Decimal(10, 2)
   building_id   Int?
   bank_accounts bank_accounts? @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_id")
+  buildings     buildings?     @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
   properties    properties?    @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_property_id")
 }
 
 model buildings {
-  id                                     Int          @id @default(autoincrement())
-  address_type                           String?      @db.VarChar(255)
-  street_address                         String?      @db.VarChar(255)
-  number                                 String?      @db.VarChar(255)
-  district                               String?      @db.VarChar(255)
-  postal_code                            String?      @db.VarChar(255)
-  locality                               String?      @db.VarChar(255)
-  province                               String?      @db.VarChar(255)
-  country                                String?      @db.VarChar(255)
-  admin_dni                              String?      @db.VarChar(255)
-  president_dni                          String?      @db.VarChar(255)
+  id                                     Int                    @id @default(autoincrement())
+  address_type                           String?                @db.VarChar(255)
+  street_address                         String?                @db.VarChar(255)
+  number                                 String?                @db.VarChar(255)
+  district                               String?                @db.VarChar(255)
+  postal_code                            String?                @db.VarChar(255)
+  locality                               String?                @db.VarChar(255)
+  province                               String?                @db.VarChar(255)
+  country                                String?                @db.VarChar(255)
+  admin_dni                              String?                @db.VarChar(255)
+  president_dni                          String?                @db.VarChar(255)
   build_year                             Int?
   floors                                 Int?
   elevators                              Int?
   parking_slots                          Int?
-  image_url                              String?      @db.VarChar(255)
+  image_url                              String?                @db.VarChar(255)
   announces                              announces[]
-  people_buildings_admin_dniTopeople     people?      @relation("buildings_admin_dniTopeople", fields: [admin_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_admin_dni")
-  people_buildings_president_dniTopeople people?      @relation("buildings_president_dniTopeople", fields: [president_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_president_dni")
+  banking_transactions                   banking_transactions[]
+  people_buildings_admin_dniTopeople     people?                @relation("buildings_admin_dniTopeople", fields: [admin_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_admin_dni")
+  people_buildings_president_dniTopeople people?                @relation("buildings_president_dniTopeople", fields: [president_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_president_dni")
+  community_fees                         community_fees[]
   incidences                             incidences[]
   properties                             properties[]
 }
@@ -127,6 +130,7 @@ model properties {
   door                    String?                   @db.VarChar(55)
   owner_dni               String?                   @db.VarChar(55)
   banking_transactions    banking_transactions[]
+  community_fees          community_fees[]
   neighbors_to_properties neighbors_to_properties[]
   owners_to_properties    owners_to_properties[]
   buildings               buildings?                @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
@@ -162,4 +166,15 @@ model owners_table {
   age  Int?
 
   @@ignore
+}
+
+model community_fees {
+  id           Int         @id @default(autoincrement())
+  property_id  Int?
+  description  String?
+  building_id  Int?
+  property_due Decimal?    @db.Decimal(10, 2)
+  due_date     DateTime?   @db.Date
+  buildings    buildings?  @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
+  properties   properties? @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_property_id")
 }

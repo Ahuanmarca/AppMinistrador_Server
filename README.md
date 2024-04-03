@@ -136,6 +136,22 @@ Returns the balance of one bank account.
 /banking/account/:bankAccountId/balance
 ```
 
+#### `Get Account Cashflow By Month Rage`
+
+Returns the cashflow (inflow and outflow) of one bank account. Will return the cashflow for the required range of months.
+
+```
+/banking/account/:accountId/getCashFlow?start=<date_string>&end=<date_string>
+```
+
+Example: Get the inflow and outflow from March 2023 to February 2024 (inclusive):
+
+```
+/banking/account/1/getCashflow?start=2023-01-01&end=2023-12-31
+```
+
+**You must provide both start and end dates, or the route will return an error.** We will implement default values in the future.
+
 #### `Get All Providers`
 
 ```

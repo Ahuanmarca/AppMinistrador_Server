@@ -13,4 +13,9 @@ router.get(
   bankingController.getBankAccountBalance
 );
 
+router.get(
+  '/account/:accountId/getCashflow',
+  bankingController.getAccountCashflowByMonthRange
+);
+
 export default router;

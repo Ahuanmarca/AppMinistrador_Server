@@ -1,0 +1,16 @@
+meta {
+  name: Get Account Cashflow By Month Range
+  type: http
+  seq: 5
+}
+
+get {
+  url: https://appministrador-server-tob7.onrender.com/banking/account/1/getCashflow?start=2023-03-01&end=2024-02-29
+  body: none
+  auth: none
+}
+
+query {
+  start: 2023-03-01
+  end: 2024-02-29
+}

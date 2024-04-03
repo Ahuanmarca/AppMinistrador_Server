@@ -1,0 +1,16 @@
+meta {
+  name: Get Account Cashflow By Month Range (Local)
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:8000/banking/account/1/getCashflow?start=2023-03-01&end=2024-02-29
+  body: none
+  auth: none
+}
+
+query {
+  start: 2023-03-01
+  end: 2024-02-29
+}

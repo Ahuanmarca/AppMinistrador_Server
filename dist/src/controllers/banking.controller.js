@@ -32,8 +32,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBankAccountBalance = exports.getAllBankAccounts = void 0;
+exports.getAccountCashflowByMonthRange = exports.getBankAccountBalance = exports.getAllBankAccounts = void 0;
 const bankingRepository = __importStar(require("../repository/banking.repository"));
+const helpers_1 = require("../utils/helpers");
+const date_fns_1 = require("date-fns");
 function getAllBankAccounts(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const allBankAccounts = yield bankingRepository.getAllBankAccounts();
@@ -49,3 +51,28 @@ function getBankAccountBalance(req, res) {
     });
 }
 exports.getBankAccountBalance = getBankAccountBalance;
+// TODO: Improve the restrictions, provide some default values!
+// If user doesn't provide the end date, it should be the current date
+// If user doesn't provide the start date, it shoud be the end date minus 11 months
+// The maximum range should be 12 months. If greater is provided, cap it and give a warning
+function getAccountCashflowByMonthRange(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { accountId } = req.params;
+        const { start, end } = req.query;
+        if (typeof start !== 'string' || typeof end !== 'string') {
+            return res.json({ Error: 'Please provide valid dates' });
+        }
+        if (!(0, helpers_1.isValidDate)(start) || !(0, helpers_1.isValidDate)(end)) {
+            return res.json({ Error: 'Please provide valid dates' });
+        }
+        if ((0, date_fns_1.isBefore)(new Date(start), new Date(end)) === false) {
+            return res.json({ Error: 'start date must be prior to end date' });
+        }
+        if ((0, date_fns_1.isSameMonth)(new Date(start), new Date(end))) {
+            return res.json({ Error: 'start and end must be different months' });
+        }
+        const cashflow = yield bankingRepository.getAccountCashflowByMonthRange(Number(accountId), start, end);
+        res.json(cashflow);
+    });
+}
+exports.getAccountCashflowByMonthRange = getAccountCashflowByMonthRange;

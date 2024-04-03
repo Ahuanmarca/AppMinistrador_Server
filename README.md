@@ -108,6 +108,18 @@ Count owners by building id. Returns the current total as a plain number.
 /people/owners/count/byBuildingId/:buildingId
 ```
 
+#### `Get Neighbours By Building Id`
+
+```
+/people/neighbours/get/byBuildingId/:buildingId
+```
+
+#### `Get Users By Building Id`
+
+```
+/people/users/get/byBuildingId/:buildingId
+```
+
 #### `Get All Providers`
 
 ```

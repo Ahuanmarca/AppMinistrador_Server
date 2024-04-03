@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNeighboursByBuildingId = exports.countOwnersByBuildingId = exports.countNeighboursByBuildingId = exports.getAllPeople = void 0;
+exports.getUsersByBuildingId = exports.getNeighboursByBuildingId = exports.countOwnersByBuildingId = exports.countNeighboursByBuildingId = exports.getAllPeople = void 0;
 const prisma_1 = __importDefault(require("../config/prisma"));
 function getAllPeople() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -78,3 +78,31 @@ function getNeighboursByBuildingId(buildingId) {
     });
 }
 exports.getNeighboursByBuildingId = getNeighboursByBuildingId;
+function getUsersByBuildingId(buildingId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield prisma_1.default.$queryRaw `
+  
+    SELECT
+      users.id AS id,
+      people.forename,
+      people.surname,
+      people.email,
+      CONCAT (people.phone_code, ' ', people.phone_number) AS phone,
+      properties.floor AS f,
+      properties.door AS d,
+      users.portrait_url
+    FROM
+      users INNER JOIN people
+      ON users.person_dni = people.dni
+      INNER JOIN neighbors_to_properties
+      ON people.dni = neighbors_to_properties.neighbor_dni
+      INNER JOIN properties
+      ON neighbors_to_properties.property_id = properties.id
+    WHERE
+      properties.building_id = ${buildingId}
+      AND neighbors_to_properties.ending_date IS NULL;
+  `;
+        return result;
+    });
+}
+exports.getUsersByBuildingId = getUsersByBuildingId;

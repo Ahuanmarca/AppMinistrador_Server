@@ -34,4 +34,5 @@ router.get('/all', (0, catchAsync_1.default)(peopleController.getAllPeople));
 router.get('/neighbours/count/byBuildingId/:buildingId', (0, catchAsync_1.default)(peopleController.countNeighboursByBuildingId));
 router.get('/owners/count/byBuildingId/:buildingId', (0, catchAsync_1.default)(peopleController.countOwnersByBuildingId));
 router.get('/neighbours/get/byBuildingId/:buildingId', (0, catchAsync_1.default)(peopleController.getNeighboursByBuildingId));
+router.get('/users/get/byBuildingId/:buildingId', (0, catchAsync_1.default)(peopleController.getUsersByBuildingId));
 exports.default = router;

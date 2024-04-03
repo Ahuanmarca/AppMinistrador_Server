@@ -44,9 +44,17 @@ async function getNeighboursByBuildingId(req: Request, res: Response) {
   res.json(buildingNeighbours);
 }
 
+async function getUsersByBuildingId(req: Request, res: Response) {
+  const { buildingId } = req.params;
+
+  const buildingUsers = await peopleRepository.getUsersByBuildingId(Number(buildingId));
+  res.json(buildingUsers);
+}
+
 export {
   getAllPeople,
   countNeighboursByBuildingId,
   countOwnersByBuildingId,
   getNeighboursByBuildingId,
+  getUsersByBuildingId,
 };

@@ -36,6 +36,7 @@ model banking_transactions {
   date          DateTime?      @db.Date
   time          DateTime?      @db.Time(6)
   amount        Decimal?       @db.Decimal(10, 2)
+  building_id   Int?
   bank_accounts bank_accounts? @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_id")
   properties    properties?    @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_property_id")
 }
@@ -128,8 +129,8 @@ model properties {
   banking_transactions    banking_transactions[]
   neighbors_to_properties neighbors_to_properties[]
   owners_to_properties    owners_to_properties[]
-  people                  people?                   @relation(fields: [owner_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "dk_owner_dni")
   buildings               buildings?                @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
+  people                  people?                   @relation(fields: [owner_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "dk_owner_dni")
 }
 
 model providers {
@@ -153,4 +154,12 @@ model users {
   portrait_url    String?      @db.VarChar(255)
   incidences      incidences[]
   people          people?      @relation(fields: [person_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_person_dni")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model owners_table {
+  name String?
+  age  Int?
+
+  @@ignore
 }

@@ -16,4 +16,9 @@ router.get(
   catchAsync(peopleController.countOwnersByBuildingId)
 );
 
+router.get(
+  '/neighbours/get/byBuildingId/:buildingId',
+  catchAsync(peopleController.getNeighboursByBuildingId)
+);
+
 export default router;

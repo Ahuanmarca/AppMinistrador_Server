@@ -46,8 +46,33 @@ async function countOwnersByBuildingId(buildingId: number) {
   return Number(buildingOwners[0].count);
 }
 
+async function getNeighboursByBuildingId(buildingId: number) {
+
+  const result = await prisma.properties.findMany({
+    where: {
+      building_id: buildingId,
+    },
+    select: {
+      floor: true,
+      door: true,
+      neighbors_to_properties: {
+        select: {
+          people: true,
+        },
+        where: {
+          ending_date: null,
+        }
+      }
+    }
+  })
+
+  return result;
+}
+
+
 export {
   getAllPeople,
   countNeighboursByBuildingId,
   countOwnersByBuildingId,
+  getNeighboursByBuildingId,
 };

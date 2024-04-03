@@ -33,4 +33,5 @@ const router = express_1.default.Router();
 router.get('/all', (0, catchAsync_1.default)(peopleController.getAllPeople));
 router.get('/neighbours/count/byBuildingId/:buildingId', (0, catchAsync_1.default)(peopleController.countNeighboursByBuildingId));
 router.get('/owners/count/byBuildingId/:buildingId', (0, catchAsync_1.default)(peopleController.countOwnersByBuildingId));
+router.get('/neighbours/get/byBuildingId/:buildingId', (0, catchAsync_1.default)(peopleController.getNeighboursByBuildingId));
 exports.default = router;

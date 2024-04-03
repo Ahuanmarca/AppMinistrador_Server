@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.countOwnersByBuildingId = exports.countNeighboursByBuildingId = exports.getAllPeople = void 0;
+exports.getNeighboursByBuildingId = exports.countOwnersByBuildingId = exports.countNeighboursByBuildingId = exports.getAllPeople = void 0;
 const prisma_1 = __importDefault(require("../config/prisma"));
 function getAllPeople() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -55,3 +55,26 @@ function countOwnersByBuildingId(buildingId) {
     });
 }
 exports.countOwnersByBuildingId = countOwnersByBuildingId;
+function getNeighboursByBuildingId(buildingId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield prisma_1.default.properties.findMany({
+            where: {
+                building_id: buildingId,
+            },
+            select: {
+                floor: true,
+                door: true,
+                neighbors_to_properties: {
+                    select: {
+                        people: true,
+                    },
+                    where: {
+                        ending_date: null,
+                    }
+                }
+            }
+        });
+        return result;
+    });
+}
+exports.getNeighboursByBuildingId = getNeighboursByBuildingId;

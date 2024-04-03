@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const buildings_router_1 = __importDefault(require("./src/routes/buildings.router"));
 const people_routes_1 = __importDefault(require("./src/routes/people.routes"));
 const providers_router_1 = __importDefault(require("./src/routes/providers.router"));
+const banking_router_1 = __importDefault(require("./src/routes/banking.router"));
 const ExpressError_1 = __importDefault(require("./src/utils/ExpressError"));
 const { PORT } = process.env;
 function main() {
@@ -25,11 +26,15 @@ function main() {
         app.use(express_1.default.json());
         app.use(express_1.default.urlencoded({ extended: true }));
         app.get('/', (req, res) => {
-            res.send('hello, world');
+            res.send(`
+    This is the AppMinistrador Server --
+    API Docs available here: https://github.com/Ahuanmarca/AppMinistrador_Server
+    `);
         });
         app.use('/buildings', buildings_router_1.default);
         app.use('/people', people_routes_1.default);
         app.use('/providers', providers_router_1.default);
+        app.use('/banking', banking_router_1.default);
         app.all('*', (req, res, next) => {
             next(new ExpressError_1.default('Page Not Found', "404"));
         });

@@ -120,6 +120,22 @@ Count owners by building id. Returns the current total as a plain number.
 /people/users/get/byBuildingId/:buildingId
 ```
 
+#### `Get All Bank Accounts`
+
+Returns accounts without balance information.
+
+```
+/banking/accounts/all
+```
+
+#### `Get Bank Account Balance (by account id)`
+
+Returns the balance of one bank account.
+
+```
+/banking/account/:bankAccountId/balance
+```
+
 #### `Get All Providers`
 
 ```

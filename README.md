@@ -14,6 +14,33 @@ https://appministrador-server-tob7.onrender.com
 
 ### Routes
 
+#### `Get Dashboard Data By Building Id`
+
+Gets all neccessary dashboard data in one request. To be used when the dashbaord first loads.
+
+```
+/dashboard/building/:buildingId/bankAccount/:accountId?start=DATE&end=DATE&dates=DATE&dates=DATE
+```
+
+**Req Params**:  
+- `:buildingId`: Building's id
+- `:accountId`: Bank account is
+
+**Query Params**:  
+- `start`: Starting date for cashflow histogram, in yyyy-mm-dd format
+- `end`: Ending date for cashflow histogram, in yyyy-mm-dd format
+- `dates`: Date(s) to be cosidered for counting neighbours. You can provide zero or more of `dates` query params, in yyyy-mm-dd format, to consider more dates. If none are provided, you will receive only the current date count.
+
+**Please note that you must provide `start` and `end` query params or you will get an error. Will implement default values in the future.**
+
+- Example:
+
+  Get data for building with id 1, bank account 1, cashflor from 2023-01-01 to 2023-12-31, neighbours count for 2023-02-29 and 2023-03-31. Will also get neighbours count for current date.
+
+  ```
+  /dashboard/building/1/bankAccount/1?start=2023-01-01&end=2023-12-31&dates=2024-02-29&dates=2024-03-31
+  ```
+
 #### `Get All Buildings`
 
 ```

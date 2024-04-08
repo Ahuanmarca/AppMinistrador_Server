@@ -1,26 +1,25 @@
-import * as buildingsRepository from '../repository/buildings.repository';
+import * as buildingsService from '../service/buildings.service';
 import { Request, Response } from 'express';
-import { formatBuilding, formatBuildingList } from '../utils/formatters';
 
 async function getAllBuildings(req: Request, res: Response) {
-  const allBuildings = await buildingsRepository.getAllBuildings();
-  const formattedBuildings = allBuildings.map((b) => formatBuilding(b));
-  res.json(formattedBuildings);
+  const allBuildings = await buildingsService.getAllBuildings();
+  res.json(allBuildings);
 }
 
 async function getBuildingsList(req: Request, res: Response) {
-  const buildingsList = await buildingsRepository.getBuildingsList();
-  res.json(formatBuildingList(buildingsList));
+  const buildingsList = await buildingsService.getBuildingsList();
+  res.json(buildingsList);
 }
 
 async function getBuildingById(req: Request, res: Response) {
   const { buildingId } = req.params;
-  const building = await buildingsRepository.getBuildingById(Number(buildingId));
-  res.json(formatBuilding(building));
+
+  if (isNaN(Number(buildingId))) {
+    return res.json({ Error: 'buildingId must be a number' });
+  }
+
+  const building = await buildingsService.getBuildingById(Number(buildingId));
+  res.json(building);
 }
 
-export {
-  getAllBuildings,
-  getBuildingsList,
-  getBuildingById,
-}
+export { getAllBuildings, getBuildingsList, getBuildingById };

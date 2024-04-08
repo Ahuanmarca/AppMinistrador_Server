@@ -8,6 +8,7 @@ router.get('/all', catchAsync(peopleController.getAllPeople));
 
 router.get(
   '/neighbours/count/byBuildingId/:buildingId',
+  // @ts-expect-error - isNaN check on controller causes error
   catchAsync(peopleController.countNeighboursByBuildingId)
 );
 

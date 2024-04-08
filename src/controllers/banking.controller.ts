@@ -1,17 +1,23 @@
 import { Request, Response } from 'express';
-import * as bankingRepository from '../repository/banking.repository';
-import { isValidDate } from '../utils/helpers';
-import { isBefore, isSameMonth } from 'date-fns';
+import * as bankingService from '../service/banking.service';
 
 async function getAllBankAccounts(req: Request, res: Response) {
-  const allBankAccounts = await bankingRepository.getAllBankAccounts();
+  const allBankAccounts = await bankingService.getAllBankAccounts();
   res.json(allBankAccounts);
 }
 
 async function getBankAccountBalance(req: Request, res: Response) {
   const { bankAccountId } = req.params;
 
-  const accountBalance = await bankingRepository.getBankAccountBalance(Number(bankAccountId));
+  if (isNaN(Number(bankAccountId))) {
+    return res.json({
+      Error: `bankAccountId must be a number, instead received the value '${bankAccountId}'`,
+    });
+  }
+
+  const accountBalance = await bankingService.getBankAccountBalance(
+    Number(bankAccountId)
+  );
   res.json(accountBalance);
 }
 
@@ -24,43 +30,36 @@ async function getAccountCashflowByMonthRange(req: Request, res: Response) {
   const { accountId } = req.params;
   const { start, end } = req.query;
 
+  if (isNaN(Number(accountId))) {
+    return res.json({
+      Error: `accountId must be a number, instead received the value '${accountId}'`,
+    });
+  }
+
   if (typeof start !== 'string' || typeof end !== 'string') {
-    return res.json({ Error: 'Please provide valid dates'});
+    return res.json({ Error: 'Please provide valid dates' });
   }
 
-  if (!isValidDate(start) || !isValidDate(end)) {
-    return res.json({ Error: 'Please provide valid dates'});
-  } 
-
-  if (isBefore(new Date(start), new Date(end)) === false) {
-    return res.json({ Error: 'start date must be prior to end date'});
-  }
-
-  if (isSameMonth(new Date(start), new Date(end))) {
-    return res.json({ Error: 'start and end must be different months' });
-  }
-
-  const cashflow = await bankingRepository.getAccountCashflowByMonthRange(
+  const cashflow = await bankingService.getAccountCashflowByMonthRange(
     Number(accountId),
     start,
     end
   );
-  
+
   res.json(cashflow);
 }
 
 async function getCurrentMonthFees(req: Request, res: Response) {
   const { buildingId } = req.params;
 
-  const currentMonthFees = await bankingRepository.getCurrentMonthFees(Number(buildingId));
-  const paidFees = await bankingRepository.getCurrentMonthPaidFees(Number(buildingId));
-
-  res.json(
-    {
-      fees: currentMonthFees[0].debt,
-      paid: paidFees[0].sum ? paidFees[0].sum : '0',
-    }
-  );
+  if (isNaN(Number(buildingId))) {
+    return res.json({
+      Error: `buildingId must be a number, instead received value '${buildingId}'`
+    });
+  }
+  
+  const fees = await bankingService.getCurrentMonthFees(Number(buildingId));
+  res.json(fees);
 }
 
 export {
@@ -68,4 +67,4 @@ export {
   getBankAccountBalance,
   getAccountCashflowByMonthRange,
   getCurrentMonthFees,
-}
+};

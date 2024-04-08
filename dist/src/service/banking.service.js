@@ -33,58 +33,47 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCurrentMonthFees = exports.getAccountCashflowByMonthRange = exports.getBankAccountBalance = exports.getAllBankAccounts = void 0;
-const bankingService = __importStar(require("../service/banking.service"));
-function getAllBankAccounts(req, res) {
+const bankingRepository = __importStar(require("../repository/banking.repository"));
+const helpers_1 = require("../utils/helpers");
+const date_fns_1 = require("date-fns");
+function getAllBankAccounts() {
     return __awaiter(this, void 0, void 0, function* () {
-        const allBankAccounts = yield bankingService.getAllBankAccounts();
-        res.json(allBankAccounts);
+        const allBankAccounts = yield bankingRepository.getAllBankAccounts();
+        return allBankAccounts;
     });
 }
 exports.getAllBankAccounts = getAllBankAccounts;
-function getBankAccountBalance(req, res) {
+function getBankAccountBalance(bankAccountId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { bankAccountId } = req.params;
-        if (isNaN(Number(bankAccountId))) {
-            return res.json({
-                Error: `bankAccountId must be a number, instead received the value '${bankAccountId}'`,
-            });
-        }
-        const accountBalance = yield bankingService.getBankAccountBalance(Number(bankAccountId));
-        res.json(accountBalance);
+        const accountBalance = yield bankingRepository.getBankAccountBalance(bankAccountId);
+        return accountBalance;
     });
 }
 exports.getBankAccountBalance = getBankAccountBalance;
-// TODO: Improve the restrictions, provide some default values!
-// If user doesn't provide the end date, it should be the current date
-// If user doesn't provide the start date, it shoud be the end date minus 11 months
-// The maximum range should be 12 months. If greater is provided, cap it and give a warning
-function getAccountCashflowByMonthRange(req, res) {
+function getAccountCashflowByMonthRange(accountId, start, end) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { accountId } = req.params;
-        const { start, end } = req.query;
-        if (isNaN(Number(accountId))) {
-            return res.json({
-                Error: `accountId must be a number, instead received the value '${accountId}'`,
-            });
+        if (!(0, helpers_1.isValidDate)(start) || !(0, helpers_1.isValidDate)(end)) {
+            return { Error: 'Please provide valid dates' };
         }
-        if (typeof start !== 'string' || typeof end !== 'string') {
-            return res.json({ Error: 'Please provide valid dates' });
+        if ((0, date_fns_1.isBefore)(new Date(start), new Date(end)) === false) {
+            return { Error: 'start date must be prior to end date' };
         }
-        const cashflow = yield bankingService.getAccountCashflowByMonthRange(Number(accountId), start, end);
-        res.json(cashflow);
+        if ((0, date_fns_1.isSameMonth)(new Date(start), new Date(end))) {
+            return { Error: 'start and end must be different months' };
+        }
+        const cashflow = yield bankingRepository.getAccountCashflowByMonthRange(accountId, start, end);
+        return cashflow;
     });
 }
 exports.getAccountCashflowByMonthRange = getAccountCashflowByMonthRange;
-function getCurrentMonthFees(req, res) {
+function getCurrentMonthFees(buildingId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { buildingId } = req.params;
-        if (isNaN(Number(buildingId))) {
-            return res.json({
-                Error: `buildingId must be a number, instead received value '${buildingId}'`
-            });
-        }
-        const fees = yield bankingService.getCurrentMonthFees(Number(buildingId));
-        res.json(fees);
+        const currentMonthFees = yield bankingRepository.getCurrentMonthFees(buildingId);
+        const paidFees = yield bankingRepository.getCurrentMonthPaidFees(buildingId);
+        return {
+            fees: currentMonthFees[0].debt,
+            paid: paidFees[0].sum ? paidFees[0].sum : '0',
+        };
     });
 }
 exports.getCurrentMonthFees = getCurrentMonthFees;

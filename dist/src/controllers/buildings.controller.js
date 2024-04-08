@@ -33,11 +33,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getBuildingById = exports.getBuildingsList = exports.getAllBuildings = void 0;
-const buildingsRepository = __importStar(require("../repository/buildings.repository"));
+const buildingsService = __importStar(require("../service/buildings.service"));
 const formatters_1 = require("../utils/formatters");
 function getAllBuildings(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const allBuildings = yield buildingsRepository.getAllBuildings();
+        const allBuildings = yield buildingsService.getAllBuildings();
         const formattedBuildings = allBuildings.map((b) => (0, formatters_1.formatBuilding)(b));
         res.json(formattedBuildings);
     });
@@ -45,7 +45,7 @@ function getAllBuildings(req, res) {
 exports.getAllBuildings = getAllBuildings;
 function getBuildingsList(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const buildingsList = yield buildingsRepository.getBuildingsList();
+        const buildingsList = yield buildingsService.getBuildingsList();
         res.json((0, formatters_1.formatBuildingList)(buildingsList));
     });
 }
@@ -53,7 +53,12 @@ exports.getBuildingsList = getBuildingsList;
 function getBuildingById(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { buildingId } = req.params;
-        const building = yield buildingsRepository.getBuildingById(Number(buildingId));
+        if (isNaN(Number(buildingId))) {
+            return res.json({
+                Error: `buildingId must be a number, instead received value '${buildingId}'`
+            });
+        }
+        const building = yield buildingsService.getBuildingById(Number(buildingId));
         res.json((0, formatters_1.formatBuilding)(building));
     });
 }

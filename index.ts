@@ -4,6 +4,7 @@ import buildingsRouter from './src/routes/buildings.router';
 import peopleRouter from './src/routes/people.routes';
 import providersRouter from './src/routes/providers.router';
 import bankingRouter from './src/routes/banking.router';
+import dashboardRouter from './src/routes/dashboard.router';
 import ExpressError from './src/utils/ExpressError';
 
 const { PORT } = process.env;
@@ -24,6 +25,7 @@ async function main() {
   app.use('/people', peopleRouter);
   app.use('/providers', providersRouter);
   app.use('/banking', bankingRouter);
+  app.use('/dashboard', dashboardRouter);
 
   app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', "404"));

@@ -1,0 +1,18 @@
+meta {
+  name: Get Dashboard Data (Local)
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8000/dashboard/building/1/bankAccount/1?start=2023-01-01&end=2023-12-31&dates=2024-02-29&dates=2024-03-31
+  body: none
+  auth: none
+}
+
+query {
+  start: 2023-01-01
+  end: 2023-12-31
+  dates: 2024-02-29
+  dates: 2024-03-31
+}

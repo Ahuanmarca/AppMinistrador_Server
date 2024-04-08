@@ -17,16 +17,11 @@ async function getBuildingById(req: Request, res: Response) {
   const { buildingId } = req.params;
 
   if (isNaN(Number(buildingId))) {
-    return res.json({
-      Error: `buildingId must be a number, instead received value '${buildingId}'`
-    });
+    return res.json({ Error: 'buildingId must be a number' });
   }
+
   const building = await buildingsService.getBuildingById(Number(buildingId));
   res.json(formatBuilding(building));
 }
 
-export {
-  getAllBuildings,
-  getBuildingsList,
-  getBuildingById,
-}
+export { getAllBuildings, getBuildingsList, getBuildingById };

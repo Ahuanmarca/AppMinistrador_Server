@@ -8,6 +8,7 @@ router.get('/all', catchAsync(buildingsController.getAllBuildings));
 
 router.get('/list', catchAsync(buildingsController.getBuildingsList));
 
+// @ts-expect-error - isNaN check on controller causes error
 router.get('/getById/:buildingId', catchAsync(buildingsController.getBuildingById));
 
 export default router;

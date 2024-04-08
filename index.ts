@@ -6,6 +6,7 @@ import providersRouter from './src/routes/providers.router';
 import bankingRouter from './src/routes/banking.router';
 import dashboardRouter from './src/routes/dashboard.router';
 import ExpressError from './src/utils/ExpressError';
+import cors from 'cors';
 
 const { PORT } = process.env;
 
@@ -13,6 +14,7 @@ async function main() {
   const app = express();
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(cors());
 
   app.get('/', (req, res) => {
     res.send(`

@@ -145,6 +145,9 @@ model providers {
   phone_code   String       @db.VarChar(55)
   phone_number String       @db.VarChar(255)
   email        String       @db.VarChar(255)
+  avg_review   Decimal?     @db.Decimal(10, 2)
+  review_count Int?
+  image_url    String?
   incidences   incidences[]
 }
 

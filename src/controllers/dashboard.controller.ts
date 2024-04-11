@@ -12,7 +12,7 @@ import * as peopleService from '../service/people.service';
 // - Cuotas del mes         ✔️
 // - Ingresos vs. gastos    ✔️ -- 'start' / 'end' (dates) must come from Client
 // - Total inquilinos       ✔️ -- 'dates' must come from Client
-// - Total propietarios
+// - Total propietarios     ✔️
 
 async function getDashboardDataByBuildingId(req: Request, res: Response) {
   const { buildingId, accountId } = req.params;

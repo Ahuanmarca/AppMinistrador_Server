@@ -32,7 +32,27 @@ async function getBuildingById(buildingId: number) {
     },
     include: {
       people_buildings_president_dniTopeople: true,
-      incidences: true,
+      incidences: {
+        include: {
+          users: {
+            select: {
+              id: true,
+              person_dni: true,
+              username: true,
+              portrait_url: true,
+              people: {
+                select: {
+                  forename: true,
+                  surname: true,
+                  email: true,
+                  phone_code: true,
+                  phone_number: true,
+                }
+              }
+            }
+          },
+        },
+      },
       announces: true,
     }
   });

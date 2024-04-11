@@ -33,7 +33,16 @@ async function getBuildingById(buildingId: number) {
     include: {
       people_buildings_president_dniTopeople: true,
       incidences: {
-        include: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          image_url: true,
+          provider_id: true,
+          date: true,
+          time: true,
+          status: true,
+          category: true,
           users: {
             select: {
               id: true,

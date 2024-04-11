@@ -79,6 +79,7 @@ model incidences {
   date        DateTime?  @db.Date
   time        DateTime?  @db.Time(6)
   status      String?    @db.VarChar(55)
+  category    String?    @db.VarChar(55)
   buildings   buildings? @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
   providers   providers? @relation(fields: [provider_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_provider_id")
   users       users?     @relation(fields: [user_dni], references: [person_dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dni")
@@ -145,6 +146,9 @@ model providers {
   phone_code   String       @db.VarChar(55)
   phone_number String       @db.VarChar(255)
   email        String       @db.VarChar(255)
+  avg_review   Decimal?     @db.Decimal(10, 2)
+  review_count Int?
+  image_url    String?
   incidences   incidences[]
 }
 

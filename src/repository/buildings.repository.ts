@@ -19,6 +19,7 @@ async function getBuildingsList() {
       address_type: true,
       street_address: true,
       number: true,
+      district: true,
     }
   });
 

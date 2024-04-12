@@ -14,6 +14,7 @@ function formatBuildingList(buildings) {
     return {
       id: building.id,
       title: `${building.address_type} ${building.street_address} ${building.number}`,
+      district: building.district,
     }
   })
 }

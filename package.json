@@ -14,7 +14,8 @@
     "prestart": "npm run build",
     "start": "node dist/index.js",
     "predev": "npm run build",
-    "dev": "concurrently \"npx tsc -w\" \"nodemon dist/index.js\""
+    "dev": "concurrently \"npx tsc -w\" \"nodemon dist/index.js\"",
+    "postinstall": "prisma generate"
   },
   "author": "Renzo Belon",
   "license": "ISC",

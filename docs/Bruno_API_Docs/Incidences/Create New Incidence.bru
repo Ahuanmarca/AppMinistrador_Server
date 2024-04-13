@@ -4,8 +4,19 @@ meta {
   seq: 3
 }
 
-get {
+post {
   url: https://appministrador-server-tob7.onrender.com/incidences/create
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "title": "Hay cucarachas en el baño",
+    "description": "En el baño de la planta baja hay cucarachas",
+    "image_url": "https://picsum.photos/200/300",
+    "user_dni": "92347502X",
+    "building_id": "1",
+    "category": "Limpieza"
+  }
 }

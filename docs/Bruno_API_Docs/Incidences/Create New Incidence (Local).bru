@@ -1,0 +1,22 @@
+meta {
+  name: Create New Incidence (Local)
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8000/incidences/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Hay cucarachas en el baño",
+    "description": "En el baño de la planta baja hay cucarachas",
+    "image_url": "https://picsum.photos/200/300",
+    "user_dni": "92347502X",
+    "building_id": "1",
+    "category": "Limpieza"
+  }
+}

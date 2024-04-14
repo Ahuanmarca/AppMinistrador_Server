@@ -6,6 +6,7 @@ import providersRouter from './src/routes/providers.router';
 import bankingRouter from './src/routes/banking.router';
 import dashboardRouter from './src/routes/dashboard.router';
 import incidencesRouter from './src/routes/incidences.router';
+import usersRouter from './src/routes/users.router';
 import ExpressError from './src/utils/ExpressError';
 import cors from 'cors';
 
@@ -30,6 +31,7 @@ async function main() {
   app.use('/banking', bankingRouter);
   app.use('/dashboard', dashboardRouter);
   app.use('/incidences', incidencesRouter);
+  app.use('/users', usersRouter);
 
   app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', "404"));

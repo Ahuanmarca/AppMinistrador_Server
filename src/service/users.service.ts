@@ -10,12 +10,13 @@ async function getById(userId) {
   return user;
 }
 
-
-
-
-
+async function getByUsername(username) {
+  const user = await usersRepository.getByUsername(username);
+  return user;
+}
 
 export {
-  getById,
   getAll,
+  getById,
+  getByUsername,
 }

@@ -24,9 +24,22 @@ async function getById(userId) {
   return user;
 }
 
+async function getByUsername(username) {
 
+  const user = await prisma.users.findFirst({
+    where: {
+      username: username,
+    },
+    include: {
+      people: true,
+    }
+  })
+
+  return user;
+}
 
 export {
-  getById,
   getAll,
+  getById,
+  getByUsername,
 }

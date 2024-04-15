@@ -1,14 +1,21 @@
 import * as buildingsController from '../controllers/buildings.controller';
 import express from 'express';
 import catchAsync from '../middlewares/catchAsync';
+import requireLogin from '../middlewares/requireLogin';
 
 const router = express.Router();
 
-router.get('/all', catchAsync(buildingsController.getAllBuildings));
+router.get(
+  '/all', requireLogin,
+  catchAsync(buildingsController.getAllBuildings));
 
-router.get('/list', catchAsync(buildingsController.getBuildingsList));
+router.get(
+  '/list', requireLogin,
+  catchAsync(buildingsController.getBuildingsList));
 
-// @ts-expect-error - isNaN check on controller causes error
-router.get('/getById/:buildingId', catchAsync(buildingsController.getBuildingById));
+router.get(
+  '/getById/:buildingId', requireLogin,
+  // @ts-expect-error - isNaN check on controller causes error
+  catchAsync(buildingsController.getBuildingById));
 
 export default router;

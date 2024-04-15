@@ -16,6 +16,14 @@ function isValidDate(dateString): boolean {
       dateObject.toISOString().slice(0, 10) === dateString;
 }
 
+function isValidEmail(email) {
+  // eslint-disable-next-line no-useless-escape
+  const emailRegex = /^(?=.{1,254}$)(?=.{1,64}@.{1,255}$)[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?!-)[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/;
+  // regex validates emails according to RFC 5321 conforming to Google's standards for nodemailer
+  return emailRegex.test(email);
+}
+
 export {
   isValidDate,
+  isValidEmail,
 }

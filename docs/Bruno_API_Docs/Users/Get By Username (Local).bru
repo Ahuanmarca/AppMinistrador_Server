@@ -1,0 +1,15 @@
+meta {
+  name: Get By Username (Local)
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:8000/users/getByUsername?username=carmenespinosa
+  body: none
+  auth: none
+}
+
+query {
+  username: carmenespinosa
+}

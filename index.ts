@@ -1,5 +1,8 @@
 import './src/config/environment';
 import express from 'express';
+import ExpressError from './src/utils/ExpressError';
+import cors from 'cors';
+
 import buildingsRouter from './src/routes/buildings.router';
 import peopleRouter from './src/routes/people.routes';
 import providersRouter from './src/routes/providers.router';
@@ -8,8 +11,6 @@ import dashboardRouter from './src/routes/dashboard.router';
 import incidencesRouter from './src/routes/incidences.router';
 import usersRouter from './src/routes/users.router';
 import authRouter from './src/routes/auth.router';
-import ExpressError from './src/utils/ExpressError';
-import cors from 'cors';
 
 const { PORT } = process.env;
 

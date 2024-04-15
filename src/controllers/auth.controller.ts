@@ -1,6 +1,5 @@
-import {Request, Response} from 'express';
+import { Request, Response } from 'express';
 import * as authService from '../service/auth.service';
-// import { isValidEmail } from '../utils/helpers';
 
 async function login(req: Request, res: Response) {
   const { username, password } = req.body;

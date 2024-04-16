@@ -4,12 +4,12 @@ import bcrypt from 'bcrypt';
 
 async function login({ username, password }) {
   const user = await usersRepository.getByUsername(username);
-  
+
   if (!user) {
     const myError = {
       code: 401,
       msg: 'Wrong credentials',
-    }
+    };
     throw new Error(JSON.stringify(myError));
   }
 
@@ -20,13 +20,26 @@ async function login({ username, password }) {
     const myError = {
       code: 401,
       msg: 'Wrong credentials',
-    }
+    };
     throw new Error(JSON.stringify(myError));
   }
-  
+
   const { TOKEN_TIMEOUT } = process.env;
-  const token = getToken({ userId: user.id, timeout: TOKEN_TIMEOUT })
-  return token;
+  const token = getToken({ userId: user.id, timeout: TOKEN_TIMEOUT });
+
+  return {
+    token,
+    user: {
+      id: user.id,
+      forename: user.people.forename,
+      surname: user.people.surname,
+      email: user.people.email,
+      phone: user.people.phone_code + user.people.phone_number,
+      dni: user.person_dni,
+      username: user.username,
+      portrait_url: user.portrait_url,
+    },
+  };
 }
 
 async function isExistingUser(username) {
@@ -34,7 +47,4 @@ async function isExistingUser(username) {
   return existingUser;
 }
 
-export {
-  login,
-  isExistingUser,
-}
+export { login, isExistingUser };

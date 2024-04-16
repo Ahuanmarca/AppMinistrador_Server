@@ -1,0 +1,18 @@
+meta {
+  name: Update Incidence Status (Local)
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:8000/incidences/update/status
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "2",
+    "status": "solucionado"
+  }
+}

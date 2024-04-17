@@ -1,0 +1,18 @@
+meta {
+  name: Update Incidence Status
+  type: http
+  seq: 5
+}
+
+post {
+  url: https://appministrador-server-tob7.onrender.com/incidences/update/status
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "2",
+    "status": "solucionado"
+  }
+}

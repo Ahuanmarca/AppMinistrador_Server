@@ -9,7 +9,13 @@ async function createIncidence(incidence) {
   return newIncidence;
 }
 
+async function updateStatus(id, status) {
+  const updatedIncidence = await incidencesRepository.updateStatus(id, status);
+  return updatedIncidence;
+}
+
 export {
   getAllIncidences,
   createIncidence,
+  updateStatus,
 }

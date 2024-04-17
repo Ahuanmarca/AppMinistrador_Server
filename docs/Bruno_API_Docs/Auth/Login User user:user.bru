@@ -1,11 +1,18 @@
 meta {
-  name: Login User
+  name: Login User user:user
   type: http
   seq: 1
 }
 
 post {
   url: https://appministrador-server-tob7.onrender.com/auth/login
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "username": "user",
+    "password": "user"
+  }
 }

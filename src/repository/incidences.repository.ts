@@ -14,7 +14,7 @@ async function createIncidence(incidence) {
       building_id: Number(incidence.building_id),
       date: new Date(),
       time: new Date(),
-      status: 'Pendiente',
+      status: 'pendiente',
       category: incidence.category,
     }
   })
@@ -22,7 +22,21 @@ async function createIncidence(incidence) {
   return newIncidence;
 }
 
+async function updateStatus(id, status) {
+  const updatedIncidence = await prisma.incidences.update({
+    where: {
+      id: Number(id)
+    },
+    data: {
+      status: status
+    }
+  })
+
+  return updatedIncidence;
+}
+
 export {
   getAllIncidences,
   createIncidence,
+  updateStatus,
 }

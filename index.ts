@@ -2,6 +2,9 @@ import './src/config/environment';
 import express from 'express';
 import ExpressError from './src/utils/ExpressError';
 import cors from 'cors';
+import http from 'http';
+import { Server as SocketIoServer } from 'socket.io';
+import { setIo } from './src/controllers/incidences.controller';
 
 import buildingsRouter from './src/routes/buildings.router';
 import peopleRouter from './src/routes/people.routes';
@@ -16,6 +19,11 @@ const { PORT } = process.env;
 
 async function main() {
   const app = express();
+
+  const server = http.createServer(app);
+  const io = new SocketIoServer(server);
+  setIo(io);
+
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cors());
@@ -40,8 +48,8 @@ async function main() {
     next(new ExpressError('Page Not Found', "404"));
   })
 
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
   });
 }
 

@@ -14,7 +14,7 @@ async function createIncidence(incidence) {
       building_id: Number(incidence.building_id),
       date: new Date(),
       time: new Date(),
-      status: 'Pendiente',
+      status: 'pendiente',
       category: incidence.category,
     }
   })

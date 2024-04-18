@@ -1,25 +1,115 @@
 # AppMinistrador Server
 
-Backend for the AppMinistrador app.  
 
-The AppMinistrador app is the capstone project for the Full Stack Developer Bootcamp at The Bridge, in Valencia - Spain.  
+Backend for the AppMinistrador app. This is the capstone project for the Full Stack Developer Bootcamp at The Bridge, in Valencia - Spain.  
+API Docs: https://ahuanmarca.github.io/AppMinistrador_Server/#/
 
-## API
+# API
 
-### Base URL
+Here you can find all the endpoints to interact with the AppMinistrador Server.
+
+## Base URL
 
 ```
 https://appministrador-server-tob7.onrender.com
 ```
 
-### Routes
+## Authentication
 
-#### `Get Dashboard Data By Building Id`
+### Login
 
-Gets all neccessary dashboard data in one request. To be used when the dashbaord first loads.
+`POST`
 
 ```
-/dashboard/building/:buildingId/bankAccount/:accountId?start=DATE&end=DATE&dates=DATE&dates=DATE
+/auth/login
+```
+
+**Body:**
+
+```json
+{
+  "username": "username",
+  "password": "password"
+}
+```
+
+## Banking
+
+### Get All Bank Accounts
+
+Returns accounts without balance information.
+
+```
+/banking/accounts/all
+```
+
+### Get Bank Account Balance (by account id)
+
+Returns the balance of one bank account.
+
+```
+/banking/account/:bankAccountId/balance
+```
+
+### Get Account Cashflow By Month Rage
+
+Returns the cashflow (inflow and outflow) of one bank account. Will return the cashflow for the required range of months.
+
+```
+/banking/account/:accountId/getCashFlow?start=<date_string>&end=<date_string>
+```
+
+Example: Get the inflow and outflow from March 2023 to February 2024 (inclusive):
+
+```
+/banking/account/1/getCashflow?start=2023-01-01&end=2023-12-31
+```
+
+**You must provide both start and end dates, or the route will return an error.** We will implement default values in the future.
+
+### Get Current Month Community Fees
+
+Returns current month community fees and paid fees.
+
+```
+/banking/building/:buildingId/fees
+```
+
+## Buildings
+
+### Get All Buildings
+
+```
+/buildings/all
+```
+
+### Get Building List
+
+Get a list of all buildings, including title (address) and id. Intended for dropdown menu.
+
+```
+/buildings/list
+```
+
+### Get Building By Id
+
+Get one building by id. Includes the following related data:
+- President
+- Incidences
+- Announces
+
+```
+/buildings/getById/:buildingId
+```
+
+## Dashboard
+
+### Get Dashboard Data By Building Id
+
+Gets all neccessary dashboard data in one request. To be used when the dashbaord first loads and when a new building is selected. Can also be used to change date ranges in for the banking data.
+
+```
+/dashboard/building/:buildingId/bankAccount/:accountId?start="DATE"&end="DATE"&dates="DATE"&dates="DATE"
 ```
 
 **Req Params**:  
@@ -31,42 +121,64 @@ Gets all neccessary dashboard data in one request. To be used when the dashbaord
 - `end`: Ending date for cashflow histogram, in yyyy-mm-dd format
 - `dates`: Date(s) to be cosidered for counting neighbours. You can provide zero or more of `dates` query params, in yyyy-mm-dd format, to consider more dates. If none are provided, you will receive only the current date count.
 
-**Please note that you must provide `start` and `end` query params or you will get an error. Will implement default values in the future.**
+**Please note that you must provide `start` and `end` query params or you will get an error. We will implement default values in the future.**
 
 - Example:
 
-  Get data for building with id 1, bank account 1, cashflor from 2023-01-01 to 2023-12-31, neighbours count for 2023-02-29 and 2023-03-31. Will also get neighbours count for current date.
+  Get data for building with id 1, bank account 1, cashflow from 2023-01-01 to 2023-12-31, neighbour count for 2023-02-29 and 2023-03-31. Will also get neighbour count for current date.
 
   ```
   /dashboard/building/1/bankAccount/1?start=2023-01-01&end=2023-12-31&dates=2024-02-29&dates=2024-03-31
   ```
 
-#### `Get All Buildings`
+## Incidences
+
+### Create New Incidence
+
+`POST` - Creates a new incidence.
 
 ```
-/buildings/all
+/incidences/create
+```
+**Body:**
+
+```json
+{
+  "title": "Incidence Title",
+  "description": "Description",
+  "image_url": "https://image-url.com",
+  "user_dni": "999999999",
+  "building_id": "1",
+  "category": "Category"
+}
 ```
 
-#### `Get Building List`
-
-Get a list of all buildings, including title (address) and id. Intended for dropdown menu.
+### Get All Incidences
 
 ```
-/buildings/list
+/incidences/all
 ```
 
-#### `Get Building By Id`
+### Update Incidence Status
 
-Get one building by id. Includes the following related data:
-- President
-- Incidences
-- Announces
+`POST`
 
 ```
-/buildings/getById/:buildingId
+/incidences/update/status
 ```
 
-#### `Get All People`
+**Body:**
+
+```json
+{
+  "id": "2",
+  "status": "solucionado"
+}
+```
+
+## People
+
+### Get All People
 
 Get all people from database.
 
@@ -74,7 +186,7 @@ Get all people from database.
 /people/all
 ```
 
-#### `Count Neighbours By Building Id and Date(s)`
+### Count Neighbours By Building Id and Date(s)
 
 Counts neighbours by buiding id and date(s).
 
@@ -127,7 +239,7 @@ Counts neighbours by buiding id and date(s).
   ]
   ```
 
-#### `Count Owners By Building Id`
+### Count Owners By Building Id
 
 Count owners by building id. Returns the current total as a plain number.
 
@@ -135,63 +247,46 @@ Count owners by building id. Returns the current total as a plain number.
 /people/owners/count/byBuildingId/:buildingId
 ```
 
-#### `Get Neighbours By Building Id`
+### Get Neighbours By Building Id
 
 ```
 /people/neighbours/get/byBuildingId/:buildingId
 ```
 
-#### `Get Users By Building Id`
+### Get Users By Building Id
 
 ```
 /people/users/get/byBuildingId/:buildingId
 ```
 
-#### `Get All Bank Accounts`
+## Providers
 
-Returns accounts without balance information.
-
-```
-/banking/accounts/all
-```
-
-#### `Get Bank Account Balance (by account id)`
-
-Returns the balance of one bank account.
-
-```
-/banking/account/:bankAccountId/balance
-```
-
-#### `Get Account Cashflow By Month Rage`
-
-Returns the cashflow (inflow and outflow) of one bank account. Will return the cashflow for the required range of months.
-
-```
-/banking/account/:accountId/getCashFlow?start=<date_string>&end=<date_string>
-```
-
-Example: Get the inflow and outflow from March 2023 to February 2024 (inclusive):
-
-```
-/banking/account/1/getCashflow?start=2023-01-01&end=2023-12-31
-```
-
-**You must provide both start and end dates, or the route will return an error.** We will implement default values in the future.
-
-#### `Get Current Month Community Fees`
-
-Returns current month community fees and paid fees.
-
-```
-/banking/building/:buildingId/fees
-```
-
-#### `Get All Providers`
+### Get All Providers
 
 ```
 /providers/all
 ```
+
+## Users
+
+### Get All Users
+
+```
+/users/all
+```
+
+### Get User By Id
+
+```
+/users/getById/:id
+```
+
+### Get User By Username
+
+```
+/users/getByUsername?username=carmenespinosa
+```
+
 
 ## Technologies
 

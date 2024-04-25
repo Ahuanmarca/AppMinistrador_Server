@@ -1,6 +1,5 @@
 import * as usersRepository from '../repository/users.repository';
 import getToken from '../utils/getToken';
-import bcrypt from 'bcrypt';
 
 async function login({ username, password }) {
   const user = await usersRepository.getByUsername(username);
@@ -14,7 +13,9 @@ async function login({ username, password }) {
   }
 
   const { hash } = user;
-  const compare = await bcrypt.compare(password, hash);
+  // Bun does not support $2a$ hashes, so we need to replace them with $2b$
+  const fixedHash = hash.replace(/^\$2a\$/, '$2b$');
+  const compare = await Bun.password.verify(password, fixedHash);
 
   if (!compare) {
     const myError = {

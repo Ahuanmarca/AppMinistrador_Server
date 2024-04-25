@@ -1,4 +1,3 @@
-import './src/config/environment';
 import express from 'express';
 import ExpressError from './src/utils/ExpressError';
 import cors from 'cors';
@@ -15,10 +14,11 @@ import incidencesRouter from './src/routes/incidences.router';
 import usersRouter from './src/routes/users.router';
 import authRouter from './src/routes/auth.router';
 
-const { PORT } = process.env;
+const { PORT } = Bun.env;
 
 async function main() {
   const app = express();
+  console.log('Hello from a Bun in the Oven! 🍞');
 
   const server = http.createServer(app);
   const io = new SocketIoServer(server, {

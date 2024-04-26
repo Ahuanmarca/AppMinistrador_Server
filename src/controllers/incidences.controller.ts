@@ -1,14 +1,7 @@
-import { Server } from 'socket.io';
 import * as incidencesService from '../service/incidences.service';
 import { Request, Response } from 'express';
 import { Incidence } from '../types/Incidence';
-
-let io: Server;
-
-// Initialize socket.io
-function setIo(serverIo: Server) {
-  io = serverIo;
-}
+import { getIo } from '../config/socket';
 
 async function getAllIncidences(req: Request, res: Response) {
   const allIncidences = await incidencesService.getAllIncidences();
@@ -21,7 +14,8 @@ async function createIncidence(req: Request, res: Response) {
   res.json(newIncidence);
 
   // Emit new incidence to all clients
-  io.emit('incidenceCreated', newIncidence);
+  getIo().emit('incidenceCreated', newIncidence);
+  console.log('Incidence created');
 }
 
 async function updateStatus(req: Request, res: Response) {
@@ -31,7 +25,6 @@ async function updateStatus(req: Request, res: Response) {
 }
 
 export {
-  setIo,
   getAllIncidences,
   createIncidence,
   updateStatus,

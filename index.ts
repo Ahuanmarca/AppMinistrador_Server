@@ -3,7 +3,7 @@ import ExpressError from './src/utils/ExpressError';
 import cors from 'cors';
 import http from 'http';
 import { Server as SocketIoServer } from 'socket.io';
-import { setIo } from './src/controllers/incidences.controller';
+import { setIo } from './src/config/socket'; 
 
 import buildingsRouter from './src/routes/buildings.router';
 import peopleRouter from './src/routes/people.routes';

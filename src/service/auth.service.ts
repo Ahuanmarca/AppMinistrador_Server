@@ -1,7 +1,8 @@
 import * as usersRepository from '../repository/users.repository';
 import getToken from '../utils/getToken';
+import { AuthCredentials } from '../types/AuthCredentials';
 
-async function login({ username, password }) {
+async function login({ username, password }: AuthCredentials) {
   const user = await usersRepository.getByUsername(username);
 
   if (!user) {
@@ -28,6 +29,14 @@ async function login({ username, password }) {
   const { TOKEN_TIMEOUT } = process.env;
   const token = getToken({ userId: user.id, timeout: TOKEN_TIMEOUT });
 
+  // phone_code and phone_number are nullable on the database...
+  // phone should never be null for 'users', but it can be null for other people
+  const phone = user.people.phone_code
+    ? user.people.phone_code
+    : '' + user.people.phone_number
+    ? user.people.phone_number
+    : '';
+
   return {
     token,
     user: {
@@ -35,7 +44,7 @@ async function login({ username, password }) {
       forename: user.people.forename,
       surname: user.people.surname,
       email: user.people.email,
-      phone: user.people.phone_code + user.people.phone_number,
+      phone: phone,
       dni: user.person_dni,
       username: user.username,
       portrait_url: user.portrait_url,
@@ -43,7 +52,7 @@ async function login({ username, password }) {
   };
 }
 
-async function isExistingUser(username) {
+async function isExistingUser(username: string) {
   const existingUser = await usersRepository.getByUsername(username);
   return existingUser;
 }

@@ -154,22 +154,14 @@ model providers {
 
 model users {
   id              Int          @id @default(autoincrement())
-  person_dni      String?      @unique @db.VarChar(255)
-  username        String?      @db.VarChar(255)
-  hash            String?      @db.VarChar(255)
+  person_dni      String       @unique @db.VarChar(255)
+  username        String       @db.VarChar(255)
+  hash            String
   is_validated    Boolean?     @default(false)
   is_system_admin Boolean?     @default(false)
   portrait_url    String?      @db.VarChar(255)
   incidences      incidences[]
-  people          people?      @relation(fields: [person_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_person_dni")
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model owners_table {
-  name String?
-  age  Int?
-
-  @@ignore
+  people          people       @relation(fields: [person_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_person_dni")
 }
 
 model community_fees {

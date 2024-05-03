@@ -3,7 +3,7 @@ import { formatBuilding, formatBuildingList } from '../utils/formatters';
 
 async function getAllBuildings() {
   const allBuildings = await buildingsRepository.getAllBuildings();
-  return allBuildings.map((b) => formatBuilding(b));
+  return allBuildings.map((building) => formatBuilding(building));
 }
 
 async function getBuildingsList() {
@@ -13,6 +13,9 @@ async function getBuildingsList() {
 
 async function getBuildingById(buildingId: number) {
   const building = await buildingsRepository.getBuildingById(buildingId);
+  if (!building) {
+    throw new Error('Building not found by getBuildingById');
+  }
   return formatBuilding(building);
 }
 

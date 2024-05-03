@@ -1,12 +1,21 @@
 import prisma from '../config/prisma';
+import { Building } from '../types/Building';
 
 async function getAllBuildings() {
   const allBuildings = await prisma.buildings.findMany({
     include: {
       people_buildings_president_dniTopeople: true,
-      incidences: true,
+      incidences: {
+        include: {
+          users: {
+            include: {
+              people: true,
+            },
+          },
+        },
+      },
       announces: true,
-    }
+    },
   });
 
   return allBuildings;
@@ -20,51 +29,30 @@ async function getBuildingsList() {
       street_address: true,
       number: true,
       district: true,
-    }
+    },
   });
 
   return buildingList;
 }
 
 async function getBuildingById(buildingId: number) {
-  const building = prisma.buildings.findUnique({
+  const building: Building | null = await prisma.buildings.findUnique({
     where: {
       id: buildingId,
     },
     include: {
       people_buildings_president_dniTopeople: true,
       incidences: {
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          image_url: true,
-          provider_id: true,
-          date: true,
-          time: true,
-          status: true,
-          category: true,
+        include: {
           users: {
-            select: {
-              id: true,
-              person_dni: true,
-              username: true,
-              portrait_url: true,
-              people: {
-                select: {
-                  forename: true,
-                  surname: true,
-                  email: true,
-                  phone_code: true,
-                  phone_number: true,
-                }
-              }
-            }
+            include: {
+              people: true,
+            },
           },
         },
       },
       announces: true,
-    }
+    },
   });
   return building;
 }
@@ -73,4 +61,4 @@ export {
   getAllBuildings,
   getBuildingsList,
   getBuildingById,
-}
+};

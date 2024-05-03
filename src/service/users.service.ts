@@ -5,12 +5,12 @@ async function getAll() {
   return allUsers;
 }
 
-async function getById(userId) {
+async function getById(userId: number | string) {
   const user = await usersRepository.getById(userId);
   return user;
 }
 
-async function getByUsername(username) {
+async function getByUsername(username: string) {
   const user = await usersRepository.getByUsername(username);
   return user;
 }

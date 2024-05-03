@@ -8,13 +8,13 @@ datasource db {
 }
 
 model announces {
-  id          Int        @id @default(autoincrement())
-  title       String?    @db.VarChar(255)
-  description String?
-  building_id Int?
-  date        DateTime?  @db.Date
-  time        DateTime?  @db.Time(6)
-  buildings   buildings? @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(255)
+  description String
+  building_id Int
+  date        DateTime  @db.Date
+  time        DateTime  @db.Time(6)
+  buildings   buildings @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
 }
 
 model bank_accounts {
@@ -44,25 +44,25 @@ model banking_transactions {
 
 model buildings {
   id                                     Int                    @id @default(autoincrement())
-  address_type                           String?                @db.VarChar(255)
-  street_address                         String?                @db.VarChar(255)
-  number                                 String?                @db.VarChar(255)
-  district                               String?                @db.VarChar(255)
-  postal_code                            String?                @db.VarChar(255)
-  locality                               String?                @db.VarChar(255)
-  province                               String?                @db.VarChar(255)
-  country                                String?                @db.VarChar(255)
-  admin_dni                              String?                @db.VarChar(255)
-  president_dni                          String?                @db.VarChar(255)
-  build_year                             Int?
-  floors                                 Int?
-  elevators                              Int?
-  parking_slots                          Int?
-  image_url                              String?                @db.VarChar(255)
+  address_type                           String                 @db.VarChar(255)
+  street_address                         String                 @db.VarChar(255)
+  number                                 String                 @db.VarChar(255)
+  district                               String                 @db.VarChar(255)
+  postal_code                            String                 @db.VarChar(255)
+  locality                               String                 @db.VarChar(255)
+  province                               String                 @db.VarChar(255)
+  country                                String                 @db.VarChar(255)
+  admin_dni                              String                 @db.VarChar(255)
+  president_dni                          String                 @db.VarChar(255)
+  build_year                             Int
+  floors                                 Int
+  elevators                              Int
+  parking_slots                          Int
+  image_url                              String                 @db.VarChar(255)
   announces                              announces[]
   banking_transactions                   banking_transactions[]
-  people_buildings_admin_dniTopeople     people?                @relation("buildings_admin_dniTopeople", fields: [admin_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_admin_dni")
-  people_buildings_president_dniTopeople people?                @relation("buildings_president_dniTopeople", fields: [president_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_president_dni")
+  people_buildings_admin_dniTopeople     people                 @relation("buildings_admin_dniTopeople", fields: [admin_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_admin_dni")
+  people_buildings_president_dniTopeople people                 @relation("buildings_president_dniTopeople", fields: [president_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_president_dni")
   community_fees                         community_fees[]
   incidences                             incidences[]
   properties                             properties[]
@@ -73,16 +73,16 @@ model incidences {
   title       String
   description String?
   image_url   String?
-  user_dni    String?    @db.VarChar(255)
-  building_id Int?
+  user_dni    String     @db.VarChar(255)
+  building_id Int
   provider_id Int?
-  date        DateTime?  @db.Date
-  time        DateTime?  @db.Time(6)
-  status      String?    @db.VarChar(55)
-  category    String?    @db.VarChar(55)
-  buildings   buildings? @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
+  date        DateTime   @db.Date
+  time        DateTime   @db.Time(6)
+  status      String     @db.VarChar(55)
+  category    String     @db.VarChar(55)
+  buildings   buildings  @relation(fields: [building_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_building_id")
   providers   providers? @relation(fields: [provider_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_provider_id")
-  users       users?     @relation(fields: [user_dni], references: [person_dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dni")
+  users       users      @relation(fields: [user_dni], references: [person_dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dni")
 }
 
 model neighbors_to_properties {
@@ -154,22 +154,14 @@ model providers {
 
 model users {
   id              Int          @id @default(autoincrement())
-  person_dni      String?      @unique @db.VarChar(255)
-  username        String?      @db.VarChar(255)
-  hash            String?      @db.VarChar(255)
-  is_validated    Boolean?     @default(false)
-  is_system_admin Boolean?     @default(false)
+  person_dni      String       @unique @db.VarChar(255)
+  username        String       @db.VarChar(255)
+  hash            String
+  is_validated    Boolean      @default(false)
+  is_system_admin Boolean      @default(false)
   portrait_url    String?      @db.VarChar(255)
   incidences      incidences[]
-  people          people?      @relation(fields: [person_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_person_dni")
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model owners_table {
-  name String?
-  age  Int?
-
-  @@ignore
+  people          people       @relation(fields: [person_dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "fk_person_dni")
 }
 
 model community_fees {

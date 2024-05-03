@@ -1,10 +1,11 @@
 import prisma from '../config/prisma';
+import { IncidenceInput } from '../types/IncidenceInput';
 
 async function getAllIncidences() {
   return await prisma.incidences.findMany();
 }
 
-async function createIncidence(incidence) {
+async function createIncidence(incidence: IncidenceInput) {
   const newIncidence = await prisma.incidences.create({
     data: {
       title: incidence.title,
@@ -22,7 +23,7 @@ async function createIncidence(incidence) {
   return newIncidence;
 }
 
-async function updateStatus(id, status) {
+async function updateStatus(id: number | string, status: string) {
   const updatedIncidence = await prisma.incidences.update({
     where: {
       id: Number(id)

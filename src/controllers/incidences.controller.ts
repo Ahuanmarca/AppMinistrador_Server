@@ -1,6 +1,6 @@
 import * as incidencesService from '../service/incidences.service';
 import { Request, Response } from 'express';
-import { Incidence } from '../types/Incidence';
+import { IncidenceInput } from '../types/IncidenceInput';
 import { getIo } from '../config/socket';
 
 async function getAllIncidences(req: Request, res: Response) {
@@ -9,7 +9,7 @@ async function getAllIncidences(req: Request, res: Response) {
 }
 
 async function createIncidence(req: Request, res: Response) {
-  const input: Incidence = req.body;
+  const input: IncidenceInput = req.body;
   const newIncidence = await incidencesService.createIncidence(input);
   res.json(newIncidence);
 
@@ -19,7 +19,8 @@ async function createIncidence(req: Request, res: Response) {
 }
 
 async function updateStatus(req: Request, res: Response) {
-  const { id, status } = req.body;
+  const { id, status }: { id: number, status: string } = req.body;
+  console.log(typeof id, typeof status);
   const updatedIncidence = await incidencesService.updateStatus(id, status);
   res.json(updatedIncidence);
 }

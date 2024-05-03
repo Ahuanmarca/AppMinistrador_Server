@@ -49,7 +49,7 @@ async function getCurrentMonthFees(buildingId: number) {
 
   return {
     fees: currentMonthFees[0].debt,
-    paid: paidFees[0].sum ? paidFees[0].sum : '0',
+    paid: paidFees[0].sum ? paidFees[0].sum : 0,
   };
 }
 

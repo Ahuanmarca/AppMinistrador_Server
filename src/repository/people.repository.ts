@@ -1,4 +1,5 @@
 import prisma from '../config/prisma';
+import { UserQueryRaw } from '../types/UserQueryRaw';
 
 async function getAllPeople() {
   const allPeople = await prisma.people.findMany();
@@ -36,7 +37,7 @@ async function countNeighboursByBuildingId(
 }
 
 async function countOwnersByBuildingId(buildingId: number) {
-  const buildingOwners = await prisma.$queryRaw`
+  const buildingOwners = await prisma.$queryRaw<{ count: number }[]>`
 
     SELECT count(DISTINCT owners_to_properties.owner_dni)
     FROM properties INNER JOIN owners_to_properties
@@ -69,9 +70,12 @@ async function getNeighboursByBuildingId(buildingId: number) {
   return result;
 }
 
+// The query results in an array of objects that have a different
+// shape than the User model and/or the users table in the database.
+// Therefore, we cannot use the Prisma generated types for this query.
 async function getUsersByBuildingId(buildingId: number) {
 
-  const result = await prisma.$queryRaw`
+  const result = await prisma.$queryRaw<UserQueryRaw[]>`
   
     SELECT
       users.id AS id,

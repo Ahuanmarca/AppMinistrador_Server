@@ -14,6 +14,12 @@ function requireLogin(req: Request, res: Response, next: NextFunction ) {
 
   const { TOKEN_SECRET_WORD } = process.env;
 
+  // provess.env variables are of type string | undefined for TS
+  if (!TOKEN_SECRET_WORD) {
+    res.status(500);
+    return res.json({ msg: 'Internal Server Error' });
+  }
+
   jwt.verify(
     token,
     TOKEN_SECRET_WORD,

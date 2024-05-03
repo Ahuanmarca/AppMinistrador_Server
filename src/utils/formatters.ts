@@ -1,24 +1,63 @@
-import { buildings } from '@prisma/client';
-import { Person } from '../types/Person';
-import _ from 'lodash';
+import { Building } from '../types/Building';
 
-// 'buildings' is the type of the object returned by Prisma
-interface Building extends buildings {
-  people_buildings_president_dniTopeople?: Person;
-}
+// I had to pick all the fields manually just to
+// omit the fields that are not needed in the frontend
+// and to avoid exposing sensitive data
 
 function formatBuilding(building: Building) {
-  // Change the name of the key for better readability
-  const buildingClone = _.cloneDeep(building);
-  const president = buildingClone.people_buildings_president_dniTopeople;
-  delete buildingClone.people_buildings_president_dniTopeople;
-
-  // I would also remove the 'presindent_dni' key, but I get an error
-  // delete buildingClone.president_dni;
-
   return {
-    president: president,
-    ...buildingClone,
+    id: building.id,
+    address_type: building.address_type,
+    street_address: building.street_address,
+    number: building.number,
+    district: building.district,
+    postal_code: building.postal_code,
+    locality: building.locality,
+    province: building.province,
+    country: building.country,
+    admin_dni: building.admin_dni,
+    president_dni: building.president_dni,
+    build_year: building.build_year,
+    floors: building.floors,
+    elevators: building.elevators,
+    parking_slots: building.parking_slots,
+    image_url: building.image_url,
+    president: building.people_buildings_president_dniTopeople,
+    announces: building.announces,
+    incidences: building.incidences.map((incidence) => {
+      return {
+        id: incidence.id,
+        title: incidence.title,
+        description: incidence.description,
+        image_url: incidence.image_url,
+        user_dni: incidence.user_dni,
+        building_id: incidence.building_id,
+        provider_id: incidence.provider_id,
+        date: incidence.date,
+        time: incidence.time,
+        status: incidence.status,
+        category: incidence.category,
+        users: {
+          id: incidence.users.id,
+          person_dni: incidence.users.person_dni,
+          username: incidence.users.username,
+          is_validated: incidence.users.is_validated,
+          is_system_admin: incidence.users.is_system_admin,
+          portrait_url: incidence.users.portrait_url,
+          people: {
+            id: incidence.users.people.id,
+            forename: incidence.users.people.forename,
+            surname: incidence.users.people.surname,
+            second_surname: incidence.users.people.second_surname,
+            email: incidence.users.people.email,
+            phone_code: incidence.users.people.phone_code,
+            phone_number: incidence.users.people.phone_number,
+            birth: incidence.users.people.birth,
+            dni: incidence.users.people.dni,
+          },
+        },
+      };
+    }),
   };
 }
 

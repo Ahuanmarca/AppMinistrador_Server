@@ -10,7 +10,7 @@ async function getAll() {
 }
 
 
-async function getById(userId) {
+async function getById(userId: number | string) {
 
   const user = await prisma.users.findUnique({
     where: {
@@ -24,7 +24,7 @@ async function getById(userId) {
   return user;
 }
 
-async function getByUsername(username) {
+async function getByUsername(username: string) {
 
   const user = await prisma.users.findFirst({
     where: {

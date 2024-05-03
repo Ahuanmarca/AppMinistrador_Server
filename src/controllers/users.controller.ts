@@ -14,6 +14,9 @@ async function getById(req: Request, res: Response) {
 
 async function getByUsername(req: Request, res: Response) {
   const { username } = req.query;
+  if (!username || typeof username !== 'string') {
+    return res.status(400).json({ message: 'Invalid username' });
+  }
   const user = await usersService.getByUsername(username);
   res.json(user);
 }

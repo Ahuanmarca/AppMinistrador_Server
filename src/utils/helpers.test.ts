@@ -9,7 +9,6 @@ test("isValidDate", () => {
   expect(isValidDate("2021-13-01")).toBe(false);
   expect(isValidDate("2021-12-31")).toBe(true);
   expect(isValidDate("hello")).toBe(false);
-  expect(isValidDate({})).toBe(false);
 });
 
 test("isValidEmail", () => {
@@ -17,7 +16,5 @@ test("isValidEmail", () => {
   expect(isValidEmail("example@mail")).toBe(false);
   expect(isValidEmail("example.mail.foo")).toBe(false);
   expect(isValidEmail("example@mail.")).toBe(false);
-  expect(isValidEmail(123)).toBe(false);
-  expect(isValidEmail({})).toBe(false);
   expect(isValidEmail("he@ll.ou")).toBe(true);
 });

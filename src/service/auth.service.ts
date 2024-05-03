@@ -27,6 +27,11 @@ async function login({ username, password }: AuthCredentials) {
   }
 
   const { TOKEN_TIMEOUT } = process.env;
+
+  if (!TOKEN_TIMEOUT) {
+    throw new Error('Internal Server Error');
+  }
+
   const token = getToken({ userId: user.id, timeout: TOKEN_TIMEOUT });
 
   // phone_code and phone_number are nullable on the database...

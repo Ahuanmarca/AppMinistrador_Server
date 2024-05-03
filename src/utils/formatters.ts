@@ -22,7 +22,17 @@ function formatBuilding(building: Building) {
   };
 }
 
-function formatBuildingList(buildings: Array<Building>) {
+// The type annotation matches the returned object from
+// the getBuildingsList() function in the repository
+function formatBuildingList(
+  buildings: Array<{
+    number: string | null;
+    id: number;
+    address_type: string | null;
+    street_address: string | null;
+    district: string | null;
+  }>
+) {
   return buildings.map((building) => {
     return {
       id: building.id,
